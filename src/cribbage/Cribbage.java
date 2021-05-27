@@ -4,6 +4,9 @@ package cribbage;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
+import cribbage.Score.ScorerComposite;
+import cribbage.Score.ScorerCompositeFactory;
+import cribbage.Score.ScorerFactory;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -33,7 +36,7 @@ public class Cribbage extends CardGame {
 		}
 	}
 
-	static int cardValue(Card c) { return ((Cribbage.Rank) c.getRank()).value; }
+	public static int cardValue(Card c) { return ((Cribbage.Rank) c.getRank()).value; }
 
 	/**
 	 * Returns the order (where it fits in the ordering of cards) of the given card
@@ -76,8 +79,8 @@ public class Cribbage extends CardGame {
 	static Random random;
 
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
-			int x = random.nextInt(clazz.getEnumConstants().length);
-			return clazz.getEnumConstants()[x];
+		int x = random.nextInt(clazz.getEnumConstants().length);
+		return clazz.getEnumConstants()[x];
 	}
 
 	static boolean ANIMATE;
@@ -104,32 +107,36 @@ public class Cribbage extends CardGame {
 	static int SEED;
 
 	public static Card randomCard(Hand hand){
-			int x = random.nextInt(hand.getNumberOfCards());
-			return hand.get(x);
+		int x = random.nextInt(hand.getNumberOfCards());
+		return hand.get(x);
 	}
 
 	private GamePhase gamePhase = GamePhase.PLAY;
 	private final String version = "0.1";
+
+	//	TODO: (MAYBE) GET THESE FROM PROPERTY FILE
 	static public final int nPlayers = 2;
 	public final int nStartCards = 6;
 	public final int nDiscards = 2;
 	private final int handWidth = 400;
 	private final int cribWidth = 150;
 	private final int segmentWidth = 180;
+
 	private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover", new MyCardValues());
 	private final Location[] handLocations = {
-				new Location(360, 75),
-				new Location(360, 625)
+			new Location(360, 75),
+			new Location(360, 625)
 	};
 	private final Location[] scoreLocations = {
-				new Location(590, 25),
-				new Location(590, 675)
+			new Location(590, 25),
+			new Location(590, 675)
 	};
 	private final Location[] segmentLocations = {	// need at most three as 3x31=93 > 2x4x10=80
 			new Location(150, 350),
 			new Location(400, 350),
 			new Location(650, 350)
 	};
+
 	private final Location starterLocation = new Location(50, 625);
 	private final Location cribLocation = new Location(700, 625);
 	private final Location seedLocation = new Location(5, 25);
@@ -137,6 +144,7 @@ public class Cribbage extends CardGame {
 	private final Actor[] scoreActors = {null, null}; //, null, null };
 	private final Location textLocation = new Location(350, 450);
 	private final Hand[] hands = new Hand[nPlayers];
+	private final Hand[] initialHands = new Hand[nPlayers];
 	private Hand starter;
 	private Hand crib;
 
@@ -149,11 +157,11 @@ public class Cribbage extends CardGame {
 	final Font bigFont = new Font("Serif", Font.BOLD, 36);
 
 	private void initScore() {
-		 for (int i = 0; i < nPlayers; i++) {
-			 scores[i] = 0;
-			 scoreActors[i] = new TextActor("0", Color.WHITE, bgColor, bigFont);
-			 addActor(scoreActors[i], scoreLocations[i]);
-		 }
+		for (int i = 0; i < nPlayers; i++) {
+			scores[i] = 0;
+			scoreActors[i] = new TextActor("0", Color.WHITE, bgColor, bigFont);
+			addActor(scoreActors[i], scoreLocations[i]);
+		}
 	}
 
 	private void updateScore(int player) {
@@ -212,13 +220,19 @@ public class Cribbage extends CardGame {
 		dealt.setVerso(false);
 		transfer(dealt, starter);
 
+		// Copy the initial hands of players so that scoring can be done during show, and add the starter card to them
+		for (int i = 0; i < hands.length; i++) {
+			initialHands[i] = copyHand(hands[i]);
+			initialHands[i].insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
+		}
+
 		// Scoring
 		// If the starter card is a Jack, the dealer gets points
 		addToPlayerScore(1, ScorerFactory.getInstance().getJackStarterScorer().evaluate(starter));
 
 	}
 
-	// This method was changed to a static method, since it does not rely on any instance viarbles, and other classes can
+	// This method was changed to a static method, since it does not rely on any instance variables, and other classes can
 	// make use of it
 	public static int total(Hand hand) {
 		int total = 0;
@@ -302,11 +316,16 @@ public class Cribbage extends CardGame {
 		int nonDealer = 0;
 		int dealer = 1;
 		// First score the non-dealer's hand
-		addToPlayerScore(nonDealer, scorer.evaluate(hands[nonDealer]));
+		System.out.println("Player 0 show points: " + scorer.evaluate(initialHands[nonDealer]));
+		addToPlayerScore(nonDealer, scorer.evaluate(initialHands[nonDealer]));
 		// Then the dealer's hand
-		addToPlayerScore(dealer, scorer.evaluate(hands[dealer]));
+		System.out.println("Player 1 show points: " + scorer.evaluate(initialHands[dealer]));
+		addToPlayerScore(dealer, scorer.evaluate(initialHands[dealer]));
 		// Finally the crib gets scored for the dealer
-		addToPlayerScore(dealer, scorer.evaluate(crib));
+		Hand cribAndStarter = copyHand(crib);
+		cribAndStarter.insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
+		System.out.println("Crib show points: " + scorer.evaluate(cribAndStarter));
+		addToPlayerScore(dealer, scorer.evaluate(cribAndStarter));
 	}
 
 	public Cribbage()
@@ -339,7 +358,7 @@ public class Cribbage extends CardGame {
 
 	public static void main(String[] args)
 			throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
-				InstantiationException, IllegalAccessException {
+			InstantiationException, IllegalAccessException {
 		/* Handle Properties */
 		// System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		Properties cribbageProperties = new Properties();
@@ -382,6 +401,25 @@ public class Cribbage extends CardGame {
 	}
 
 	// New methods -----------------------------------------------------------------------------------------------------
+	/**
+	 * Returns a copy of the given Hand based on the Deck used by the Cribbage game instance
+	 * @param hand The Hand to copy
+	 * @return A copy of the Hand based on the same Deck
+	 */
+	public static Hand copyHand(Hand hand) {
+		Hand newHand = new Hand(Cribbage.getInstance().deck);
+		for (Card c: hand.getCardList()) {
+			newHand.insert(c.getSuit(), c.getRank(), false);
+		}
+
+		return newHand;
+	}
+
+	/** @return cribbage - the instance of Cribbage to play on */
+	public static Cribbage getInstance() {
+		return cribbage;
+	}
+
 	/** @return The hand containing the starter card */
 	public Hand getStarter() {
 		return starter;

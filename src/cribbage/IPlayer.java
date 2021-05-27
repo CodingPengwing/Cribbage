@@ -27,7 +27,7 @@ public abstract class IPlayer {
             }
         // hand.draw(); Cribbage.delay(1000);
         Card s = selectToLay();
-            hand.insert(unlayable, true);
-            return s;
+        hand.insert(unlayable, true);
+        return s;
     }
 }
