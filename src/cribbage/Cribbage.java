@@ -4,6 +4,8 @@ package cribbage;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
+import cribbage.Log.Logger;
+import cribbage.Score.Scorer;
 import cribbage.Score.ScorerComposite;
 import cribbage.Score.ScorerCompositeFactory;
 import cribbage.Score.ScorerFactory;
@@ -21,7 +23,7 @@ public class Cribbage extends CardGame {
 	static Cribbage cribbage;	// Provide access to singleton
 
 	/** An enum for representing the phase of the game */
-	public enum GamePhase { PLAY, SHOW }
+	public enum GamePhase { DEAL, DISCARD, STARTER, PLAY, PLAY_GO, SHOW, SCORE_PLAY, SCORE_SHOW }
 
 	public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES }
 
@@ -33,6 +35,20 @@ public class Cribbage extends CardGame {
 		Rank(int order, int value) {
 			this.order = order;
 			this.value = value;
+		}
+	}
+
+	/** A class for keeping track of game information */
+	public class GameInformation {
+		int currentPlayer = 0;
+		GamePhase currentGamePhase = GamePhase.PLAY;
+
+		public int getCurrentPlayerScore() {
+			return scores[currentPlayer];
+		}
+
+		public int getCurrentPlayer() {
+			return currentPlayer;
 		}
 	}
 
@@ -50,9 +66,9 @@ public class Cribbage extends CardGame {
 	/*
 	Canonical String representations of Suit, Rank, Card, and Hand
 	*/
-	String canonical(Suit s) { return s.toString().substring(0, 1); }
+	public String canonical(Suit s) { return s.toString().substring(0, 1); }
 
-	String canonical(Rank r) {
+	public String canonical(Rank r) {
 		switch (r) {
 			case ACE:case KING:case QUEEN:case JACK:case TEN:
 				return r.toString().substring(0, 1);
@@ -61,9 +77,9 @@ public class Cribbage extends CardGame {
 		}
 	}
 
-	String canonical(Card c) { return canonical((Rank) c.getRank()) + canonical((Suit) c.getSuit()); }
+	public String canonical(Card c) { return canonical((Rank) c.getRank()) + canonical((Suit) c.getSuit()); }
 
-	String canonical(Hand h) {
+	public String canonical(Hand h) {
 		Hand h1 = new Hand(deck); // Clone to sort without changing the original hand
 		for (Card C: h.getCardList()) h1.insert(C.getSuit(), C.getRank(), false);
 		h1.sort(Hand.SortType.POINTPRIORITY, false);
@@ -111,7 +127,7 @@ public class Cribbage extends CardGame {
 		return hand.get(x);
 	}
 
-	private GamePhase gamePhase = GamePhase.PLAY;
+	private GameInformation gameInfo = new GameInformation();
 	private final String version = "0.1";
 
 	//	TODO: (MAYBE) GET THESE FROM PROPERTY FILE
@@ -170,7 +186,15 @@ public class Cribbage extends CardGame {
 		addActor(scoreActors[player], scoreLocations[player]);
 	}
 
+
+
+
+
+
+
+
 	private void deal(Hand pack, Hand[] hands) {
+		gameInfo.currentGamePhase = GamePhase.DEAL;
 		for (int i = 0; i < nPlayers; i++) {
 			hands[i] = new Hand(deck);
 			// players[i] = (1 == i ? new HumanPlayer() : new RandomPlayer());
@@ -196,6 +220,7 @@ public class Cribbage extends CardGame {
 	}
 
 	private void discardToCrib() {
+		gameInfo.currentGamePhase = GamePhase.DISCARD;
 		crib = new Hand(deck);
 		RowLayout layout = new RowLayout(cribLocation, cribWidth);
 		layout.setRotationAngle(0);
@@ -211,6 +236,7 @@ public class Cribbage extends CardGame {
 	}
 
 	private void starter(Hand pack) {
+		gameInfo.currentGamePhase = GamePhase.STARTER;
 		starter = new Hand(deck);	// if starter is a Jack, the dealer gets 2 points
 		RowLayout layout = new RowLayout(starterLocation, 0);
 		layout.setRotationAngle(0);
@@ -228,7 +254,7 @@ public class Cribbage extends CardGame {
 
 		// Scoring
 		// If the starter card is a Jack, the dealer gets points
-		addToPlayerScore(1, ScorerFactory.getInstance().getJackStarterScorer().evaluate(starter));
+		addToPlayerScore(1, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(starter));
 
 	}
 
@@ -257,15 +283,15 @@ public class Cribbage extends CardGame {
 	}
 
 	private void play() {
-		gamePhase = GamePhase.PLAY;
 		final int thirtyone = 31;
 		List<Hand> segments = new ArrayList<>();
-		int currentPlayer = 0; // Player 1 is dealer
+		gameInfo.currentPlayer = 0; // Player 1 is dealer
 		Segment s = new Segment();
 		s.reset(segments);
 		while (!(players[0].emptyHand() && players[1].emptyHand())) {
+			gameInfo.currentGamePhase = GamePhase.PLAY;
 			// System.out.println("segments.size() = " + segments.size());
-			Card nextCard = players[currentPlayer].lay(thirtyone-total(s.segment));
+			Card nextCard = players[gameInfo.currentPlayer].lay(thirtyone-total(s.segment));
 			if (nextCard == null) {
 				if (s.go) {
 					// Another "go" after previous one with no intervening cards
@@ -275,28 +301,30 @@ public class Cribbage extends CardGame {
 					// Scoring
 					// Since neither player can play another card without going over the limit, the last player who
 					// Played a card gets a point(s) for "go"
-					addToPlayerScore(s.lastPlayer, ScorerFactory.getInstance().getGoScorer().evaluate(hands[s.lastPlayer]));
+					gameInfo.currentGamePhase = GamePhase.PLAY_GO;
+					addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(hands[s.lastPlayer]));
 				} else {
 					// currentPlayer says "go"
 					s.go = true;
 				}
-				currentPlayer = (currentPlayer+1) % 2;
+				gameInfo.currentPlayer = (gameInfo.currentPlayer+1) % 2;
 			} else {
-				s.lastPlayer = currentPlayer; // last Player to play a card in this segment
+				s.lastPlayer = gameInfo.currentPlayer; // last Player to play a card in this segment
 				transfer(nextCard, s.segment);
 
 				// Scoring
 				// Score and potentially rewards the last player who played card based on play-phase scoring
+				gameInfo.currentGamePhase = GamePhase.SCORE_PLAY;
 				addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(s.segment));
 
 				if (total(s.segment) == thirtyone) {
 					// lastPlayer gets 2 points for a 31
 					s.newSegment = true;
-					currentPlayer = (currentPlayer+1) % 2;
+					gameInfo.currentPlayer = (gameInfo.currentPlayer+1) % 2;
 				} else {
 					// if total(segment) == 15, lastPlayer gets 2 points for a 15
 					if (!s.go) { // if it is "go" then same player gets another turn
-						currentPlayer = (currentPlayer+1) % 2;
+						gameInfo.currentPlayer = (gameInfo.currentPlayer+1) % 2;
 					}
 				}
 			}
@@ -308,24 +336,27 @@ public class Cribbage extends CardGame {
 	}
 
 	void showHandsCrib() {
-		gamePhase = GamePhase.SHOW;
+		gameInfo.currentGamePhase = GamePhase.SHOW;
 
 		// Scoring
 		// Reward players based on their hands and show-phase scoring rules
-		ScorerComposite scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
+		Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
 		int nonDealer = 0;
 		int dealer = 1;
 		// First score the non-dealer's hand
-		System.out.println("Player 0 show points: " + scorer.evaluate(initialHands[nonDealer]));
+		gameInfo.currentGamePhase = GamePhase.SCORE_SHOW;
 		addToPlayerScore(nonDealer, scorer.evaluate(initialHands[nonDealer]));
+		gameInfo.currentGamePhase = GamePhase.SHOW;
 		// Then the dealer's hand
-		System.out.println("Player 1 show points: " + scorer.evaluate(initialHands[dealer]));
+		gameInfo.currentGamePhase = GamePhase.SCORE_SHOW;
 		addToPlayerScore(dealer, scorer.evaluate(initialHands[dealer]));
+		gameInfo.currentGamePhase = GamePhase.SHOW;
 		// Finally the crib gets scored for the dealer
 		Hand cribAndStarter = copyHand(crib);
 		cribAndStarter.insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
-		System.out.println("Crib show points: " + scorer.evaluate(cribAndStarter));
+		gameInfo.currentGamePhase = GamePhase.SCORE_SHOW;
 		addToPlayerScore(dealer, scorer.evaluate(cribAndStarter));
+		gameInfo.currentGamePhase = GamePhase.SHOW;
 	}
 
 	public Cribbage()
@@ -427,12 +458,22 @@ public class Cribbage extends CardGame {
 
 	/** @return The current phase of the game */
 	public GamePhase getGamePhase() {
-		return gamePhase;
+		return gameInfo.currentGamePhase;
 	}
 
 	/** @return The list of players in the game */
 	public static IPlayer[] getPlayers() {
 		return players;
+	}
+
+//	private void notifyLoggers() {
+//		for (Logger l: loggers) {
+//			l.update();
+//		}
+//	}
+
+	public GameInformation getGameInfo() {
+		return gameInfo;
 	}
 
 	/**
@@ -441,6 +482,7 @@ public class Cribbage extends CardGame {
 	 * @param score The score to add
 	 */
 	public void addToPlayerScore(int playerID, int score) {
+//		notifyLoggers();
 		scores[playerID] += score;
 		updateScore(playerID);
 	}

@@ -29,4 +29,12 @@ public class ScorerComposite extends Scorer {
         for (Scorer scorer : scorers) score += scorer.evaluate(hand);
         return score;
     }
+
+    @Override
+    public ArrayList<ScorerCache> getCache() {
+        for (Scorer scorer : scorers) {
+            addAllToCache(scorer.getCache());
+        }
+        return getCache();
+    }
 }

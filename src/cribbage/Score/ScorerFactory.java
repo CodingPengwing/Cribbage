@@ -4,9 +4,19 @@ package cribbage.Score;
 public class ScorerFactory {
     private static ScorerFactory instance = null;
 
-    private ScorerFactory() {
-        // Empty singleton constructor
-    }
+    private static final FlushScorer flushScorer = new FlushScorer();
+    private static final GoScorer goScorer = new GoScorer();
+    private static final JackOfStarterSuitScorer jackOfStarterSuitScorer = new JackOfStarterSuitScorer();
+    private static final StarterScorer starterScorer = new StarterScorer();
+    private static final MilestoneScorer milestoneScorer = new MilestoneScorer();
+    private static final MilestoneScorerPlay milestoneScorerPlay = new MilestoneScorerPlay();
+    private static final PairScorer pairScorer = new PairScorer();
+    private static final PairScorerPlay pairScorerPlay = new PairScorerPlay();
+    private static final RunScorer runScorer = new RunScorer();
+    private static final RunScorerPlay runScorerPlay = new RunScorerPlay();
+
+    // Empty singleton constructor
+    private ScorerFactory() {}
 
     /**
      * Singleton getInstance method
@@ -22,51 +32,51 @@ public class ScorerFactory {
     // Factory methods -------------------------------------------------------------------------------------------------
     /** @return A new FlushScorer instance */
     public FlushScorer getFlushScorer() {
-        return new FlushScorer();
+        return flushScorer;
     }
 
     /** @return A new GoScorer instance */
     public GoScorer getGoScorer() {
-        return new GoScorer();
+        return goScorer;
     }
 
     /** @return A new JackOfStarterSuitScorer instance */
     public JackOfStarterSuitScorer getJackOfStarterSuitScorer() {
-        return new JackOfStarterSuitScorer();
+        return jackOfStarterSuitScorer;
     }
 
     /** @return A new JackStarterScorer instance */
-    public JackStarterScorer getJackStarterScorer() {
-        return new JackStarterScorer();
+    public StarterScorer getStarterScorer() {
+        return starterScorer;
     }
 
     /** @return A new MilestoneScorer instance */
     public MilestoneScorer getMilestoneScorer() {
-        return new MilestoneScorer();
+        return milestoneScorer;
     }
 
     /** @return A new MilestoneScorerPlay instance */
     public MilestoneScorerPlay getMilestoneScorerPlay() {
-        return new MilestoneScorerPlay();
+        return milestoneScorerPlay;
     }
 
     /** @return A new PairScorer instance */
     public PairScorer getPairScorer() {
-        return new PairScorer();
+        return pairScorer;
     }
 
     /** @return A new PairScorerPlay instance */
     public PairScorerPlay getPairScorerPlay() {
-        return new PairScorerPlay();
+        return pairScorerPlay;
     }
 
     /** @return A new RunScorer instance */
     public RunScorer getRunScorer() {
-        return new RunScorer();
+        return runScorer;
     }
 
     /** @return A new RunScorerPlay instance */
     public RunScorerPlay getRunScorerPlay() {
-        return new RunScorerPlay();
+        return runScorerPlay;
     }
 }

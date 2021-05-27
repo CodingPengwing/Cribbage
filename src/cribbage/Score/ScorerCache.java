@@ -1,15 +1,16 @@
 package cribbage.Score;
 
 import ch.aplu.jcardgame.Card;
+import cribbage.Cribbage;
 
 import java.util.ArrayList;
 
-public class ScoreCache {
+public class ScorerCache {
     private int score;
     private String scoreType;
     private ArrayList<Card> cards;
 
-    public ScoreCache(int score, String scoreType, ArrayList<Card> cards) {
+    public ScorerCache(int score, String scoreType, ArrayList<Card> cards) {
         this.score = score;
         this.scoreType = scoreType;
         this.cards = cards;
@@ -37,5 +38,15 @@ public class ScoreCache {
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
+    }
+
+    public String cardsToString() {
+        String str = "[";
+        for (int i = 0; i < cards.size(); i++) {
+            str += Cribbage.getInstance().canonical(cards.get(i));
+            if (i < cards.size()-1) str += ",";
+        }
+        str += "]";
+        return str;
     }
 }

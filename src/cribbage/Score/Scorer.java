@@ -3,11 +3,12 @@ package cribbage.Score;
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /** For evaluating the score of the game of Cribbage in a particular situation */
 public abstract class Scorer {
-    private final ArrayList<ScoreCache> cache = new ArrayList<>();
+    private final ArrayList<ScorerCache> cache = new ArrayList<>();
     /**
      * Evaluates the state of the game and returns a score accordingly
      * @param hand The hand of cards to be evaluated
@@ -15,12 +16,16 @@ public abstract class Scorer {
      */
     public abstract int evaluate(Hand hand);
 
-    protected ArrayList<ScoreCache> getCache() {
+    public ArrayList<ScorerCache> getCache() {
         return cache;
     }
 
     protected void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
-        this.cache.add(new ScoreCache(score, scoreType, cardList));
+        this.cache.add(new ScorerCache(score, scoreType, cardList));
+    }
+
+    protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
+        this.cache.addAll(cacheList);
     }
 
     protected void clearCache() {

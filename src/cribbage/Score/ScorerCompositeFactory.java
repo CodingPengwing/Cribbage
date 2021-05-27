@@ -6,9 +6,11 @@ import cribbage.Cribbage;
 public class ScorerCompositeFactory {
     private static ScorerCompositeFactory instance = null;
 
-    private ScorerCompositeFactory() {
-        // Empty Singleton constructor
-    }
+    private static Scorer scorerCompositeShow = null;
+    private static Scorer scorerCompositePlay = null;
+
+    // Empty Singleton constructor
+    private ScorerCompositeFactory() {}
 
     /**
      * Singleton getInstance method
@@ -21,32 +23,41 @@ public class ScorerCompositeFactory {
 
     // Factory methods -------------------------------------------------------------------------------------------------
     /** @return A Composite for scoring during the show phase */
-    private ScorerComposite getScorerCompositeShow() {
-        ScorerComposite composite = new ScorerComposite();
-        ScorerFactory scorerFactory = ScorerFactory.getInstance();
-        composite.addScorer(scorerFactory.getMilestoneScorer());
-        composite.addScorer(scorerFactory.getRunScorer());
-        composite.addScorer(scorerFactory.getPairScorer());
-        composite.addScorer(scorerFactory.getFlushScorer());
-        composite.addScorer(scorerFactory.getJackOfStarterSuitScorer());
-        return composite;
+    private Scorer getScorerCompositeShow() {
+        if (scorerCompositeShow == null) {
+            ScorerComposite composite = new ScorerComposite();
+            ScorerFactory scorerFactory = ScorerFactory.getInstance();
+            composite.addScorer(scorerFactory.getMilestoneScorer());
+            composite.addScorer(scorerFactory.getRunScorer());
+            composite.addScorer(scorerFactory.getPairScorer());
+            composite.addScorer(scorerFactory.getFlushScorer());
+            composite.addScorer(scorerFactory.getJackOfStarterSuitScorer());
+            scorerCompositeShow = composite;
+        }
+        return scorerCompositeShow;
     }
 
     /** @return A Composite for scoring during the Play phase */
-    private ScorerComposite getScorerCompositePlay() {
-        ScorerComposite composite = new ScorerComposite();
-        ScorerFactory scorerFactory = ScorerFactory.getInstance();
-        composite.addScorer(scorerFactory.getMilestoneScorerPlay());
-        composite.addScorer(scorerFactory.getRunScorerPlay());
-        composite.addScorer(scorerFactory.getPairScorerPlay());
-        return composite;
+    private Scorer getScorerCompositePlay() {
+        if (scorerCompositePlay == null) {
+            ScorerComposite composite = new ScorerComposite();
+            ScorerFactory scorerFactory = ScorerFactory.getInstance();
+            composite.addScorer(scorerFactory.getMilestoneScorerPlay());
+            composite.addScorer(scorerFactory.getRunScorerPlay());
+            composite.addScorer(scorerFactory.getPairScorerPlay());
+            scorerCompositePlay = composite;
+        }
+        return scorerCompositePlay;
     }
 
     /** @return A Composite for scoring the current phase of the game */
-    public ScorerComposite getScorerComposite() {
+    public Scorer getScorerComposite() {
+        ScorerFactory scorerFactory = ScorerFactory.getInstance();
         Cribbage cribbage = Cribbage.getInstance();
         switch (cribbage.getGamePhase()) {
             case PLAY: return getScorerCompositePlay();
+            case PLAY_GO: return scorerFactory.getGoScorer();
+            case STARTER: return scorerFactory.getStarterScorer();
             case SHOW: return getScorerCompositeShow();
             default: return null;
         }
