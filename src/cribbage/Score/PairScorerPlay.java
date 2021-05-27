@@ -10,15 +10,15 @@ import java.util.ArrayList;
 
 public class PairScorerPlay extends PairScorer {
 
-
     // Returns the number of cards which are of the same rank in a row starting from the back of the hand
-    private ArrayList<Card> getMostRecentPairs(Hand hand) {
-        ArrayList<Card> cards = hand.getCardList();
+    private ArrayList<Card> getLongestPairFromEnd(Hand hand) {
+        ArrayList<Card> cards = new ArrayList<>(hand.getCardList());
         ArrayList<Card> pairs = new ArrayList<>();
         if (cards.size() < 2) return pairs;
 
         // Reverse the order of cards so that the back of the hand is now at the front
         Collections.reverse(cards);
+
         int count = 0;
         // Get the last card's rank
         Card lastCard = cards.get(0);
@@ -35,13 +35,21 @@ public class PairScorerPlay extends PairScorer {
 
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         // During play, we only look at the longest streak from the end of the play segment
-        ArrayList<Card> cards = getMostRecentPairs(hand);
+        ArrayList<Card> cards = getLongestPairFromEnd(hand);
         switch (cards.size()) {
-            case QUAD: return QUAD_SCORE;
-            case TRIPLET: return TRIPLET_SCORE;
-            case PAIR: return PAIR_SCORE;
-            default: return 0;
+            case PAIR:
+                addToCache(PAIR_SCORE, PAIR_STR, null);
+                return PAIR_SCORE;
+            case TRIPLET:
+                addToCache(TRIPLET_SCORE, TRIPLET_STR, null);
+                return TRIPLET_SCORE;
+            case QUAD:
+                addToCache(QUAD_SCORE, QUAD_STR, null);
+                return QUAD_SCORE;
+            default:
+                return 0;
         }
     }
 }

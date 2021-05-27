@@ -5,6 +5,7 @@ import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class RunScorerPlay extends RunScorer {
@@ -57,12 +58,15 @@ public class RunScorerPlay extends RunScorer {
      */
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         Card[] longestRun = getLongestRunFromEnd(hand);
+        // No such run exists
         if (longestRun.length == 0) {
-            // No such run exists
             return 0;
         }
-
-        return getRunScores().get(longestRun.length);
+        // Else add to cache and return
+        int score = getRunScores().get(longestRun.length);
+        addToCache(score, RUN_STR + longestRun.length, null);
+        return score;
     }
 }

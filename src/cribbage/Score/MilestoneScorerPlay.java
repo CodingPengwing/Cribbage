@@ -1,13 +1,10 @@
 package cribbage.Score;
 
-import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class MilestoneScorerPlay extends MilestoneScorer {
+    private static final String THIRTYONE_STR = "thirtyone";
 
     /**
      * During the play phase checks if fifteen or thirty-one have been reached, and if so, returns an appropriate score
@@ -17,9 +14,16 @@ public class MilestoneScorerPlay extends MilestoneScorer {
      */
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         switch (Cribbage.total(hand)) {
-            case FIFTEEN: case THIRTY_ONE: return POINTS;
-            default: return 0;
+            case FIFTEEN:
+                addToCache(POINTS, FIFTEEN_STR, null);
+                return POINTS;
+            case THIRTY_ONE:
+                addToCache(POINTS, THIRTYONE_STR, null);
+                return POINTS;
+            default:
+                return 0;
         }
     }
 }

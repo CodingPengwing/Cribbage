@@ -4,10 +4,13 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 /** Assesses the runs in the given hand in accordance with the rules of the show phase */
 public class RunScorer extends Scorer {
+    protected static final String RUN_STR = "run";
     // A map of each run (key) and its respective reward score (value)
     private static final HashMap<Integer, Integer> RUN_SCORES = new HashMap<>();
 
@@ -32,7 +35,7 @@ public class RunScorer extends Scorer {
      */
     public RunScorer() {
         // The scores for respective runs, Change these value to change the reward score for a particular run
-        RUN_SCORES.put(3, 3);
+        RUN_SCORES.put(3,3);
         RUN_SCORES.put(4,4);
         RUN_SCORES.put(5,5);
         RUN_SCORES.put(6,6);
@@ -56,10 +59,16 @@ public class RunScorer extends Scorer {
      */
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         int totalScore = 0;
         ArrayList<Card[]> allRuns = getAllRuns(hand);
+        // TODO: CHECK THE RUNS ARE IN CANONICAL ORDER
+
         for (Card[] run: allRuns) {
-            totalScore += RUN_SCORES.get(run.length);
+            ArrayList<Card> cardList = new ArrayList<>(Arrays.asList(run));
+            int score = RUN_SCORES.get(run.length);
+            addToCache(score, RUN_STR + run.length, cardList);
+            totalScore += score;
         }
 
         return totalScore;

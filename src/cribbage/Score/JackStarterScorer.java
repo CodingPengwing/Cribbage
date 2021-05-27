@@ -1,11 +1,15 @@
 package cribbage.Score;
 
 import ch.aplu.jcardgame.Hand;
+import ch.aplu.jcardgame.Card;
 import cribbage.Cribbage;
+
+import java.util.ArrayList;
 
 /** Scorer for the starter card being a Jack */
 public class JackStarterScorer extends Scorer {
     private final static int SCORE = 2;
+    private static final String STARTER_STR = "starter";
 
     /**
      * Returns the score for the starter card being a Jack if that is the case, and 0 if it's not
@@ -14,9 +18,16 @@ public class JackStarterScorer extends Scorer {
      */
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         Cribbage cribbage = Cribbage.getInstance();
-        Cribbage.Rank starterRank = (Cribbage.Rank)cribbage.getStarter().getFirst().getRank();
-        if (starterRank == Cribbage.Rank.JACK) return SCORE;
+        Card starter = cribbage.getStarter().getFirst();
+        Cribbage.Rank starterRank = (Cribbage.Rank)starter.getRank();
+        if (starterRank == Cribbage.Rank.JACK) {
+            ArrayList<Card> cardList = new ArrayList<>();
+            cardList.add(starter);
+            addToCache(SCORE, STARTER_STR, cardList);
+            return SCORE;
+        }
         return 0;
     }
 }

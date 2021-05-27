@@ -6,6 +6,7 @@ import cribbage.Cribbage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /** Concrete Strategy class for checking if the current segment has reached an exact milestone value and scoring it
  * correctly if so */
@@ -16,27 +17,33 @@ public class MilestoneScorer extends Scorer{
     // TODO: GET THIS FROM PROPERTIES
     protected static final int POINTS = 2;
     private static final int MAX_COMB_SIZE = 5;
-    private static final int MIN_COMB_SIzE = 2;
+    private static final int MIN_COMB_SIZE = 2;
+    protected static final String FIFTEEN_STR = "fifteen";
 
-    private ArrayList<Integer> getAllSumCombsAndBelow(ArrayList<Card> cardList) {
-        ArrayList<Integer> combs = new ArrayList<>();
-        for (int i = MIN_COMB_SIzE; i <= MAX_COMB_SIZE; i++) {
-            combs.addAll(getAllSumCombs(i, 0, cardList));
+    private ArrayList<ArrayList<Card>> getAllCardCombinations(ArrayList<Card> cardList) {
+        // Create a new clone of the card so that we can sort it without changing the original list
+        ArrayList<Card> sortedCardList = new ArrayList<>(cardList);
+        // Now sort it, so the the resulting combinations are in order
+        Collections.sort(sortedCardList);
+        // Now get all card combinations from minimum to maximum size allowed
+        ArrayList<ArrayList<Card>> combs = new ArrayList<>();
+        for (int i = MIN_COMB_SIZE; i <= MAX_COMB_SIZE; i++) {
+            combs.addAll(getCardCombinationsOfSize(i, 0, sortedCardList));
         }
-
         return combs;
     }
 
     // Returns a list of all possible unique sum combinations of the rank values of the given card list, of the given
     // combination size, and from the given starting index
-    private ArrayList<Integer> getAllSumCombs(int combSize, int startIdx, ArrayList<Card> cardList) {
-        ArrayList<Integer> combs = new ArrayList<>();
-        // The base case. Just return the value of the cards from the start index
-        if (combSize <= 1) {
+    private ArrayList<ArrayList<Card>> getCardCombinationsOfSize(int combSize, int startIdx, ArrayList<Card> cardList) {
+        ArrayList<ArrayList<Card>> combs = new ArrayList<>();
+        // The base case. Just return lists containing a single card
+        if (combSize == 1) {
             for (Card c: cardList.subList(startIdx, cardList.size())) {
-                combs.add(Cribbage.cardValue(c));
+                ArrayList<Card> comb = new ArrayList<>();
+                comb.add(c);
+                combs.add(comb);
             }
-
             return combs;
         }
 
@@ -50,34 +57,56 @@ public class MilestoneScorer extends Scorer{
         int limit = cardList.size() - combSize + 1;
         List<Card> subList = cardList.subList(startIdx, limit);
         for (int i = 0; i < subList.size(); i++) {
-            int cardVal = Cribbage.cardValue(subList.get(i));
-            ArrayList<Integer> smallerCombs = getAllSumCombs(combSize - 1, startIdx + i + 1, cardList);
-            for (int smallComb: smallerCombs) {
-                combs.add(cardVal + smallComb);
+            Card card = subList.get(i);
+            ArrayList<ArrayList<Card>> smallerCombs = getCardCombinationsOfSize(combSize - 1, startIdx + i + 1, cardList);
+            for (ArrayList<Card> smallComb: smallerCombs) {
+                smallComb.add(0, card);
+                combs.add(smallComb);
             }
         }
 
         return combs;
     }
 
-    // Returns the number of unique combination of cards that add up to 15
-    private int getNumFifteens(Hand hand) {
-        ArrayList<Integer> combs = getAllSumCombsAndBelow(hand.getCardList());
-        System.out.println(hand.getCardList());
-        //System.out.println(combs);
-        int nFifteens = 0;
-        for (int cardSum: combs) {
-            if (cardSum == FIFTEEN) {
-                nFifteens++;
-            }
+    // Returns the sum of the given card combination
+    private int getCardCombinationSum(ArrayList<Card> cardList) {
+        int total = 0;
+        for (Card c: cardList) {
+            total += Cribbage.cardValue(c);
         }
 
-        return nFifteens;
+        return total;
     }
 
+    // Returns the number of unique combination of cards that add up to 15
+    private ArrayList<ArrayList<Card>> getFifteenCombinations(Hand hand) {
+        // Get all card combinations
+        ArrayList<ArrayList<Card>> combs = getAllCardCombinations(hand.getCardList());
+        // Look through our combinations to find ones that sum up to 15
+        ArrayList<ArrayList<Card>> fifteenCombs = new ArrayList<>();
+        for (ArrayList<Card> cardComb: combs) {
+            if (getCardCombinationSum(cardComb) == FIFTEEN) {
+                fifteenCombs.add(cardComb);
+            }
+        }
+        return fifteenCombs;
+    }
+
+    /**
+     * Returns the score for the total number of fifteens in the given hand, or 0 if none are present
+     * @param hand The hand of cards to be evaluated
+     * @return The score for the total number of fifteens in the given hand, or 0 if none are present
+     */
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         // During show we want to find all unique combinations adding up to 15
-        return POINTS * getNumFifteens(hand);
+        // Get all card combinations that add up to 15
+        ArrayList<ArrayList<Card>> fifteenCombs = getFifteenCombinations(hand);
+
+        for (ArrayList<Card> comb: fifteenCombs) {
+            addToCache(POINTS, FIFTEEN_STR, comb);
+        }
+        return POINTS * fifteenCombs.size();
     }
 }

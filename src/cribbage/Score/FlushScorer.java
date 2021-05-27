@@ -13,6 +13,8 @@ public class FlushScorer extends Scorer {
     // TODO: GET THESE FROM PROPERTY FILE
     private static final int FLUSH4_SCORE = 4;
     private static final int FLUSH5_SCORE = 5;
+    private static final String FLUSH4_STR = "flush4";
+    private static final String FLUSH5_STR = "flush5";
 
 
     /**
@@ -23,17 +25,28 @@ public class FlushScorer extends Scorer {
      */
     @Override
     public int evaluate(Hand hand) {
+        clearCache();
         // Find the suit with the highest count
         int maxSuitCount = 0;
+        ArrayList<Card> maxSuitList = new ArrayList<>();
         for (Cribbage.Suit suit: Cribbage.Suit.values()) {
-            int count = hand.getCardsWithSuit(suit).size();
-            if (count > maxSuitCount) maxSuitCount = count;
+            ArrayList<Card> suitList = hand.getCardsWithSuit(suit);
+            int count = suitList.size();
+            if (count > maxSuitCount) {
+                maxSuitCount = count;
+                maxSuitList = suitList;
+            }
         }
 
         switch (maxSuitCount) {
-            case FLUSH4: return FLUSH4_SCORE;
-            case FLUSH5: return FLUSH5_SCORE;
-            default: return 0;
+            case FLUSH4:
+                addToCache(FLUSH4_SCORE, FLUSH4_STR, maxSuitList);
+                return FLUSH4_SCORE;
+            case FLUSH5:
+                addToCache(FLUSH5_SCORE, FLUSH5_STR, maxSuitList);
+                return FLUSH5_SCORE;
+            default:
+                return 0;
         }
     }
 }
