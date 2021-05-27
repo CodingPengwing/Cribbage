@@ -5,6 +5,7 @@ import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /** Concrete Strategy class for checking if the current segment has reached an exact milestone value and scoring it
  * correctly if so */
@@ -17,9 +18,9 @@ public class MilestoneScorer extends Scorer{
     private static final int MAX_COMB_SIZE = 5;
     private static final int MIN_COMB_SIzE = 2;
 
-    private ArrayList<Integer> getAllSumCombsAndBelow(int maxCombSize, ArrayList<Card> cardList) {
+    private ArrayList<Integer> getAllSumCombsAndBelow(ArrayList<Card> cardList) {
         ArrayList<Integer> combs = new ArrayList<>();
-        for (int i = MIN_COMB_SIzE; i <= maxCombSize; i++) {
+        for (int i = MIN_COMB_SIzE; i <= MAX_COMB_SIZE; i++) {
             combs.addAll(getAllSumCombs(i, 0, cardList));
         }
 
@@ -47,9 +48,10 @@ public class MilestoneScorer extends Scorer{
         // --> Thus we need to sum 4 to every possible sum combination of size 2 of the list [3,1,5]
         // --> And we need to sum 3 to every possible sum combination of size 2 of the list [1,5]
         int limit = cardList.size() - combSize + 1;
-        for (Card c: cardList.subList(startIdx, limit)) {
-            int cardVal = Cribbage.cardValue(c);
-            ArrayList<Integer> smallerCombs = getAllSumCombs(combSize - 1, startIdx + 1, cardList);
+        List<Card> subList = cardList.subList(startIdx, limit);
+        for (int i = 0; i < subList.size(); i++) {
+            int cardVal = Cribbage.cardValue(subList.get(i));
+            ArrayList<Integer> smallerCombs = getAllSumCombs(combSize - 1, startIdx + i + 1, cardList);
             for (int smallComb: smallerCombs) {
                 combs.add(cardVal + smallComb);
             }
@@ -60,9 +62,9 @@ public class MilestoneScorer extends Scorer{
 
     // Returns the number of unique combination of cards that add up to 15
     private int getNumFifteens(Hand hand) {
-        ArrayList<Integer> combs = getAllSumCombsAndBelow(MAX_COMB_SIZE, hand.getCardList());
+        ArrayList<Integer> combs = getAllSumCombsAndBelow(hand.getCardList());
         System.out.println(hand.getCardList());
-        System.out.println(combs);
+        //System.out.println(combs);
         int nFifteens = 0;
         for (int cardSum: combs) {
             if (cardSum == FIFTEEN) {
