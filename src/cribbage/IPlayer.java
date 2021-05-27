@@ -16,6 +16,7 @@ public abstract class IPlayer {
     abstract Card discard();
     boolean emptyHand() {return hand.isEmpty();}
     abstract Card selectToLay();
+
     Card lay(int limit) {
         // System.out.println("lay(" + limit + ")");
         Hand unlayable = new Hand(deck);
