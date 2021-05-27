@@ -16,7 +16,6 @@ public abstract class IPlayer {
     abstract Card discard();
     boolean emptyHand() {return hand.isEmpty();}
     abstract Card selectToLay();
-
     Card lay(int limit) {
         // System.out.println("lay(" + limit + ")");
         Hand unlayable = new Hand(deck);
@@ -28,7 +27,7 @@ public abstract class IPlayer {
             }
         // hand.draw(); Cribbage.delay(1000);
         Card s = selectToLay();
-            hand.insert(unlayable, true);
-            return s;
+        hand.insert(unlayable, true);
+        return s;
     }
 }
