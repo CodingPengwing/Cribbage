@@ -15,10 +15,10 @@ public class ShowLogger extends Logger {
         int currentPlayer = cribbage.getGameInfo().getCurrentPlayer();
         String logString = "show,P" + currentPlayer + ",";
         Card starter = cribbage.getStarter().getFirst();
-        ArrayList<Card> cardList = new ArrayList<>(cribbage.getStartHands()[currentPlayer].getCardList());
+        ArrayList<Card> cardList = new ArrayList<>(cribbage.getGameInfo().getCurrentHand().getCardList());
         cardList.remove(starter);
         logString += cribbage.canonical(starter) + "+";
-        logString += cardArrayListToString(cardList);
+        logString += cribbage.canonical(cardList);
         printlnLog(logString);
     }
 }

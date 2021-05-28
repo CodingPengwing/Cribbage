@@ -37,15 +37,15 @@ abstract class Logger {
         }
     }
 
-    protected final String cardArrayListToString(ArrayList<Card> cardList) {
-        String str = "[";
-        for (int i = 0; i < cardList.size(); i++) {
-            str += Cribbage.getInstance().canonical(cardList.get(i));
-            if (i < cardList.size()-1) str += ",";
-        }
-        str += "]";
-        return str;
-    }
+//    protected final String cardArrayListToString(ArrayList<Card> cardList) {
+//        String str = "[";
+//        for (int i = 0; i < cardList.size(); i++) {
+//            str += Cribbage.getInstance().canonical(cardList.get(i));
+//            if (i < cardList.size()-1) str += ",";
+//        }
+//        str += "]";
+//        return str;
+//    }
 
 }
 

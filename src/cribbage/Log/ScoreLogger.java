@@ -36,7 +36,7 @@ class ScoreLogger extends Logger {
             // add the new awarded score's cardList
             logString += cache.getScoreType();
             if (cribbage.getGameInfo().getGamePhase() == Cribbage.GamePhase.SHOW_SCORE) {
-                logString += "," + cardArrayListToString(cache.getCards());
+                logString += "," + cribbage.canonical(cache.getCards());
             }
             printlnLog(logString);
         }

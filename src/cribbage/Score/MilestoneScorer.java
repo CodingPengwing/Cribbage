@@ -105,7 +105,7 @@ public class MilestoneScorer extends Scorer{
         ArrayList<ArrayList<Card>> fifteenCombs = getFifteenCombinations(hand);
 
         for (ArrayList<Card> comb: fifteenCombs) {
-            addToCache(POINTS, FIFTEEN_STR, comb);
+            addToCache(POINTS, FIFTEEN_STR, comb, new ScorerCache.CacheComparatorAlphabetical());
         }
         return POINTS * fifteenCombs.size();
     }

@@ -32,7 +32,7 @@ class SetUpLogger extends Logger {
             }
             logString = "deal,P" + i + ",";
             // turn the hand into a printable string
-            logString += cardArrayListToString(hand.getCardList());
+            logString += cribbage.canonical(hand.getCardList());
             printlnLog(logString);
         }
 

@@ -21,7 +21,13 @@ public class JackOfStarterSuitScorer extends Scorer {
     public int evaluate(Hand hand) {
         clearCache();
         Cribbage cribbage = Cribbage.getInstance();
-        Cribbage.Suit starterSuit = (Cribbage.Suit)cribbage.getStarter().getFirst().getSuit();
+        Card starter = cribbage.getStarter().getFirst();
+        // If the starter card is a Jack, there cannot be another Jack
+        // of the same suit
+        if (starter.getRank() == Cribbage.Rank.JACK) return 0;
+
+        // Otherwise, check for a Jack of the same suit as starter
+        Cribbage.Suit starterSuit = (Cribbage.Suit)starter.getSuit();
         for (Card c: hand.getCardsWithSuit(starterSuit)) {
             if (c.getRank() == Cribbage.Rank.JACK) {
                 ArrayList<Card> jack = new ArrayList<>();

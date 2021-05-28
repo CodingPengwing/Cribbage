@@ -6,12 +6,14 @@ import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 import cribbage.Log.LogManager;
 import cribbage.Score.Scorer;
+import cribbage.Score.ScorerCache;
 import cribbage.Score.ScorerCompositeFactory;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ public class Cribbage extends CardGame {
 	public class GameInformation {
 		int currentPlayer = 0;
 		GamePhase currentGamePhase = GamePhase.PLAY;
+		Hand currentHand = null;
 
 		public int getCurrentPlayerScore() {
 			return scores[currentPlayer];
@@ -50,7 +53,17 @@ public class Cribbage extends CardGame {
 		public GamePhase getGamePhase() {
 			return currentGamePhase;
 		}
-		void updateGamePhase(GamePhase phase) { currentGamePhase = phase; };
+		void updateGamePhase(GamePhase phase) {
+			currentGamePhase = phase;
+		}
+
+		public Hand getCurrentHand() {
+			return currentHand;
+		}
+
+		void setCurrentHand(Hand currentHand) {
+			this.currentHand = currentHand;
+		}
 	}
 
 	public static int cardValue(Card c) { return ((Cribbage.Rank) c.getRank()).value; }
@@ -71,6 +84,16 @@ public class Cribbage extends CardGame {
 	}
 
 	public String canonical(Card c) { return canonical((Rank) c.getRank()) + canonical((Suit) c.getSuit()); }
+
+	public String canonical(ArrayList<Card> cardList) {
+		String str = "[";
+		for (int i = 0; i < cardList.size(); i++) {
+			str += Cribbage.getInstance().canonical(cardList.get(i));
+			if (i < cardList.size()-1) str += ",";
+		}
+		str += "]";
+		return str;
+	}
 
 	public String canonical(Hand h) {
 		Hand h1 = new Hand(deck); // Clone to sort without changing the original hand
@@ -229,7 +252,7 @@ public class Cribbage extends CardGame {
 				discards.add(discard);
 			}
 			// Add the discards to the playDiscards array list
-			playerDiscards.add(discards);
+			playerDiscards.add(sortCardList(discards, Hand.SortType.POINTPRIORITY));
 			crib.sort(Hand.SortType.POINTPRIORITY, true);
 		}
 	}
@@ -345,6 +368,19 @@ public class Cribbage extends CardGame {
 				addToPlayerScore(s.lastPlayer, score);
 				scorer.clearCache();
 
+				if (players[0].emptyHand() && players[1].emptyHand()) {
+					// ----> we're in GO phase due to the last card being played
+					gameInfo.updateGamePhase(GamePhase.PLAY_SCORE_GO);
+					// Get scorer and calculate score for current player
+					scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
+					score = scorer.evaluate(hands[s.lastPlayer]);
+					// log the go score event
+					logManager.update();
+					// add to current player's score
+					addToPlayerScore(s.lastPlayer, score);
+					scorer.clearCache();
+				}
+
 				if (total(s.segment) == thirtyone) {
 					// lastPlayer gets 2 points for a 31
 					s.newSegment = true;
@@ -356,6 +392,7 @@ public class Cribbage extends CardGame {
 					}
 				}
 			}
+
 			if (s.newSegment) {
 				segments.add(s.segment);
 				s.reset(segments);
@@ -382,6 +419,7 @@ public class Cribbage extends CardGame {
 	private void showAndScore(int playerNo, Hand hand) {
 		// Assess this player's start hand and score it
 		gameInfo.currentPlayer = playerNo;
+		gameInfo.setCurrentHand(hand);
 		gameInfo.updateGamePhase(GamePhase.SHOW);
 		// log the show event
 		logManager.update();
@@ -412,6 +450,35 @@ public class Cribbage extends CardGame {
 		pack.setVerso(true);
 		pack.draw();
 		addActor(new TextActor("Seed: " + SEED, Color.BLACK, bgColor, normalFont), seedLocation);
+
+
+//		Comparator<ScorerCache> comparator = new ScorerCache.CacheComparatorAlphabetical();
+//		ArrayList<Card> cards1 = new ArrayList<>();
+//		ArrayList<Card> cards2 = new ArrayList<>();
+//		cards1.add(new Card(deck, Suit.HEARTS, Rank.FIVE));
+//		cards1.add(new Card(deck, Suit.SPADES, Rank.JACK));
+//
+//		cards2.add(new Card(deck, Suit.HEARTS, Rank.FIVE));
+//		cards2.add(new Card(deck, Suit.HEARTS, Rank.KING));
+//
+//		ScorerCache cache1 = new ScorerCache(1, "st", cards1);
+//		ScorerCache cache2 = new ScorerCache(2, "wer", cards2);
+//
+//		System.out.println(comparator.compare(cache1, cache2));
+//
+//		ArrayList<ScorerCache> caches = new ArrayList<>();
+//		caches.add(cache2);
+//		caches.add(cache1);
+//		caches.sort(comparator);
+//
+//		for (ScorerCache cache : caches) {
+//			System.out.println(cache.getScore());
+//		}
+//
+//		System.out.println("[5H, JS]".compareTo("[5H, KH]"));
+//		System.out.println(cache1.getCards().toString());
+
+
 
 		/* Play the round */
 		gameInfo.updateGamePhase(GamePhase.SETUP);

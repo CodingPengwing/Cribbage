@@ -1,7 +1,9 @@
 package cribbage.Log;
 
 import ch.aplu.jcardgame.Card;
+import cribbage.Cribbage;
 import cribbage.Score.Scorer;
+import cribbage.Score.ScorerCache;
 import cribbage.Score.ScorerCompositeFactory;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class StartLogger extends Logger {
         ArrayList<ArrayList<Card>> playerDiscards = cribbage.getPlayerDiscards();
         for (int i = 0; i < playerDiscards.size(); i++) {
             logString = "discard,P" + i + ",";
-            logString += cardArrayListToString(playerDiscards.get(i));
+            logString += cribbage.canonical(playerDiscards.get(i));
             printlnLog(logString);
         }
         // Log the starter card
@@ -30,7 +32,9 @@ public class StartLogger extends Logger {
         Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
         if (scorer.getCache().size() > 0) {
             // Dealer is always P1, starting scores have to be 2, 2
-            logString = "score,P1,2,2" + cribbage.canonical(starter);
+            ScorerCache cache = scorer.getCache().get(0);
+            logString = "score,P1,2," + cache.getScore() + "," + cache.getScoreType();
+            logString += ",["+ cribbage.canonical(starter) +"]";
             printlnLog(logString);
         }
     }

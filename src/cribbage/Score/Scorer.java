@@ -6,6 +6,8 @@ import cribbage.Cribbage;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /** For evaluating the score of the game of Cribbage in a particular situation */
 public abstract class Scorer {
@@ -31,9 +33,26 @@ public abstract class Scorer {
         }
     }
 
+    protected void addToCache(int score, String scoreType, ArrayList<Card> cardList, Comparator<ScorerCache> comparator) {
+        if (comparator == null) {
+            System.err.println("Error in addAllToCache(): null comparator");
+            System.exit(1);
+        }
+        addToCache(score, scoreType, cardList);
+        cache.sort(comparator);
+    }
 
     protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
         this.cache.addAll(cacheList);
+    }
+
+    protected void addAllToCache(ArrayList<ScorerCache> cacheList, Comparator<ScorerCache> comparator) {
+        if (comparator == null) {
+            System.err.println("Error in addAllToCache(): null comparator");
+            System.exit(1);
+        }
+        this.cache.addAll(cacheList);
+        cache.sort(comparator);
     }
 
     public void clearCache() {

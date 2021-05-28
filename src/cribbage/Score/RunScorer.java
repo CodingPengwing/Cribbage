@@ -49,18 +49,6 @@ public class RunScorer extends Scorer {
         return allRuns;
     }
 
-    @Override
-    protected void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
-        super.addToCache(score, scoreType, cardList);
-        Collections.sort(getCache());
-    }
-
-    @Override
-    protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
-        super.addAllToCache(cacheList);
-        Collections.sort(getCache());
-    }
-
     /**
      * Finds all runs of between 3 and 5 (inclusive) and returns an appropriate total score for them
      * @param hand The hand of cards to be evaluated
@@ -75,7 +63,7 @@ public class RunScorer extends Scorer {
         for (Card[] run: allRuns) {
             ArrayList<Card> cardList = new ArrayList<>(Arrays.asList(run));
             int score = RUN_SCORES.get(run.length);
-            addToCache(score, RUN_STR + run.length, cardList);
+            addToCache(score, RUN_STR + run.length, cardList, new ScorerCache.CacheComparator());
             totalScore += score;
         }
 
