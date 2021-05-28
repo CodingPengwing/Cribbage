@@ -13,6 +13,7 @@ public class StartLogger extends Logger {
             case START: break;
             default: return;
         }
+        // Log the discarded cards
         String logString;
         ArrayList<ArrayList<Card>> playerDiscards = cribbage.getPlayerDiscards();
         for (int i = 0; i < playerDiscards.size(); i++) {
@@ -20,13 +21,15 @@ public class StartLogger extends Logger {
             logString += cardArrayListToString(playerDiscards.get(i));
             printlnLog(logString);
         }
+        // Log the starter card
         Card starter = cribbage.getStarter().get(0);
         logString = "starter," + cribbage.canonical(starter);
         printlnLog(logString);
 
-        // TODO: IS IS ALWAYS P1? CAN DEALER BE P0???
+        // Log the score for dealer starter card is a jack
         Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
         if (scorer.getCache().size() > 0) {
+            // Dealer is always P1, starting scores have to be 2, 2
             logString = "score,P1,2,2" + cribbage.canonical(starter);
             printlnLog(logString);
         }

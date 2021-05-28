@@ -21,7 +21,7 @@ public class Cribbage extends CardGame {
 	static Cribbage cribbage;	// Provide access to singleton
 
 	/** An enum for representing the phase of the game */
-	public enum GamePhase { SETUP, START, PLAY, PLAY_GO, PLAY_SCORE, SHOW, SHOW_SCORE}
+	public enum GamePhase { SETUP, START, PLAY, PLAY_SCORE, PLAY_SCORE_GO, SHOW, SHOW_SCORE}
 	public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES }
 	public enum Rank {
 		// Order of cards is tied to card images
@@ -255,7 +255,6 @@ public class Cribbage extends CardGame {
 		// Scoring
 		// If the starter card is a Jack, the dealer gets points
 		addToPlayerScore(1, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(starter));
-
 	}
 
 	// This method was changed to a static method, since it does not rely on any instance variables, and other classes can
@@ -282,16 +281,24 @@ public class Cribbage extends CardGame {
 		}
 	}
 
+	private Segment s = new Segment();
+
+	public int getCurrentSegmentTotal() {
+		return total(s.segment);
+	}
+
+	public Card getLastPlayedCard() {
+		ArrayList<Card> cards = s.segment.getCardList();
+		return cards.get(cards.size()-1);
+	}
+
 	private void play() {
-		gameInfo.currentGamePhase = GamePhase.PLAY;
 		final int thirtyone = 31;
 		List<Hand> segments = new ArrayList<>();
 		gameInfo.currentPlayer = 0; // Player 1 is dealer
-		Segment s = new Segment();
 		s.reset(segments);
+		Scorer scorer;
 		while (!(players[0].emptyHand() && players[1].emptyHand())) {
-			gameInfo.currentGamePhase = GamePhase.PLAY;
-			// System.out.println("segments.size() = " + segments.size());
 			Card nextCard = players[gameInfo.currentPlayer].lay(thirtyone-total(s.segment));
 			if (nextCard == null) {
 				if (s.go) {
@@ -299,25 +306,46 @@ public class Cribbage extends CardGame {
 					// lastPlayer gets 1 point for a "go"
 					s.newSegment = true;
 
-					// Scoring
+					// ----> we're in GO phase
+					gameInfo.updateGamePhase(GamePhase.PLAY_SCORE_GO);
+					// Get scorer and calculate score for current player
+					scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
+					int score = scorer.evaluate(hands[s.lastPlayer]);
+					// log the go score event
+					logManager.update();
+					// add to current player's score
 					// Since neither player can play another card without going over the limit, the last player who
-					// Played a card gets a point(s) for "go"
-					gameInfo.currentGamePhase = GamePhase.PLAY_GO;
-//					addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(hands[s.lastPlayer]));
-					addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(starter));
+					// played a card gets a point(s) for "go"
+					addToPlayerScore(s.lastPlayer, score);
+					scorer.clearCache();
 				} else {
 					// currentPlayer says "go"
 					s.go = true;
 				}
 				gameInfo.currentPlayer = (gameInfo.currentPlayer+1) % 2;
 			} else {
-				s.lastPlayer = gameInfo.currentPlayer; // last Player to play a card in this segment
+				// nextCard not null
+				// ----> we're in PLAY phase
+				gameInfo.updateGamePhase(GamePhase.PLAY);
+				// get the last player to play a card in this segment
+				s.lastPlayer = gameInfo.currentPlayer;
+				// take their chosen card from their hand
 				transfer(nextCard, s.segment);
+				// log the play event
+				logManager.update();
 
 				// Scoring
-				// Score and potentially rewards the last player who played card based on play-phase scoring
-				gameInfo.currentGamePhase = GamePhase.PLAY_SCORE;
-				addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(s.segment));
+				// ----> we're in PLAY_SCORE phase
+				gameInfo.updateGamePhase(GamePhase.PLAY_SCORE);
+				// Get the scorer
+				scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
+				// score the player's action above
+				int score = scorer.evaluate(s.segment);
+				// log any scores awarded to the player
+				logManager.update();
+				// add the total scores awarded to the player in this PLAY_SCORE phase
+				addToPlayerScore(s.lastPlayer, score);
+				scorer.clearCache();
 
 				if (total(s.segment) == thirtyone) {
 					// lastPlayer gets 2 points for a 31

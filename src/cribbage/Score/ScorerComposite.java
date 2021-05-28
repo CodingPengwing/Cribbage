@@ -31,10 +31,23 @@ public class ScorerComposite extends Scorer {
     }
 
     @Override
-    public ArrayList<ScorerCache> getCache() {
+    public void updateCacheTotal() {
+        int total = 0;
         for (Scorer scorer : scorers) {
             addAllToCache(scorer.getCache());
+            total += scorer.getCacheTotal();
         }
-        return getCache();
+        super.setCacheTotal(total);
     }
+
+    @Override
+    public int getCacheTotal() {
+        this.updateCacheTotal();
+        return super.getCacheTotal();
+    }
+
+//    @Override
+//    public ArrayList<ScorerCache> getCache() {
+//        return super.getCache();
+//    }
 }

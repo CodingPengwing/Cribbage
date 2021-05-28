@@ -12,6 +12,7 @@ public class LogManager extends Logger {
         resetLog();
         loggers.add(new SetUpLogger());
         loggers.add(new StartLogger());
+        loggers.add(new PlayLogger());
         loggers.add(new ScoreLogger());
     }
 
