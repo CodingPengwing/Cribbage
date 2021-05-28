@@ -11,7 +11,6 @@ import java.util.Comparator;
 
 /** For evaluating the score of the game of Cribbage in a particular situation */
 public abstract class Scorer {
-    private int cacheTotal;
     private final ArrayList<ScorerCache> cache = new ArrayList<>();
     /**
      * Evaluates the state of the game and returns a score accordingly
@@ -57,21 +56,5 @@ public abstract class Scorer {
 
     public void clearCache() {
         this.cache.clear();
-    }
-
-    void updateCacheTotal() {
-        cacheTotal = 0;
-        for (ScorerCache c : cache) {
-            cacheTotal += c.getScore();
-        }
-    }
-
-    public int getCacheTotal() {
-        updateCacheTotal();
-        return cacheTotal;
-    }
-
-    void setCacheTotal(int total) {
-        cacheTotal = total;
     }
 }

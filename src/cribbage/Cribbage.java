@@ -146,7 +146,6 @@ public class Cribbage extends CardGame {
 	private GameInformation gameInfo = new GameInformation();
 	private final String version = "0.1";
 
-	//	TODO: (MAYBE) GET THESE FROM PROPERTY FILE
 	static public final int nPlayers = 2;
 	public final int nStartCards = 6;
 	public final int nDiscards = 2;
@@ -451,35 +450,6 @@ public class Cribbage extends CardGame {
 		pack.draw();
 		addActor(new TextActor("Seed: " + SEED, Color.BLACK, bgColor, normalFont), seedLocation);
 
-
-//		Comparator<ScorerCache> comparator = new ScorerCache.CacheComparatorAlphabetical();
-//		ArrayList<Card> cards1 = new ArrayList<>();
-//		ArrayList<Card> cards2 = new ArrayList<>();
-//		cards1.add(new Card(deck, Suit.HEARTS, Rank.FIVE));
-//		cards1.add(new Card(deck, Suit.SPADES, Rank.JACK));
-//
-//		cards2.add(new Card(deck, Suit.HEARTS, Rank.FIVE));
-//		cards2.add(new Card(deck, Suit.HEARTS, Rank.KING));
-//
-//		ScorerCache cache1 = new ScorerCache(1, "st", cards1);
-//		ScorerCache cache2 = new ScorerCache(2, "wer", cards2);
-//
-//		System.out.println(comparator.compare(cache1, cache2));
-//
-//		ArrayList<ScorerCache> caches = new ArrayList<>();
-//		caches.add(cache2);
-//		caches.add(cache1);
-//		caches.sort(comparator);
-//
-//		for (ScorerCache cache : caches) {
-//			System.out.println(cache.getScore());
-//		}
-//
-//		System.out.println("[5H, JS]".compareTo("[5H, KH]"));
-//		System.out.println(cache1.getCards().toString());
-
-
-
 		/* Play the round */
 		gameInfo.updateGamePhase(GamePhase.SETUP);
 		deal(pack, hands);
@@ -498,16 +468,22 @@ public class Cribbage extends CardGame {
 		refresh();
 	}
 
+	public static Properties cribbageProperties = new Properties();
+
 	public static void main(String[] args)
 			throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
 			InstantiationException, IllegalAccessException {
 		/* Handle Properties */
 		// System.out.println("Working Directory = " + System.getProperty("user.dir"));
-		Properties cribbageProperties = new Properties();
+
 		// Default properties
 		cribbageProperties.setProperty("Animate", "true");
 		cribbageProperties.setProperty("Player0", "cribbage.RandomPlayer");
 		cribbageProperties.setProperty("Player1", "cribbage.HumanPlayer");
+		// Default advanced settings
+		cribbageProperties.setProperty("nPlayers", "2");
+		cribbageProperties.setProperty("nStartCards", "6");
+		cribbageProperties.setProperty("nDiscards", "2");
 
 		// Read properties
 		try (FileReader inStream = new FileReader("cribbage.properties")) {
