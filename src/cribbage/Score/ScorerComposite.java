@@ -27,15 +27,23 @@ public class ScorerComposite extends Scorer {
     public int evaluate(Hand hand) {
         int score = 0;
         for (Scorer scorer : scorers) score += scorer.evaluate(hand);
+        updateCacheTotal();
         return score;
+    }
+
+    private void updateCache() {
+        clearCache();
+        for (Scorer scorer : scorers) {
+            addAllToCache(scorer.getCache());
+        }
     }
 
     @Override
     public void updateCacheTotal() {
+        updateCache();
         int total = 0;
-        for (Scorer scorer : scorers) {
-            addAllToCache(scorer.getCache());
-            total += scorer.getCacheTotal();
+        for (ScorerCache cache : getCache()) {
+            total += cache.getScore();
         }
         super.setCacheTotal(total);
     }
@@ -46,8 +54,9 @@ public class ScorerComposite extends Scorer {
         return super.getCacheTotal();
     }
 
-//    @Override
-//    public ArrayList<ScorerCache> getCache() {
-//        return super.getCache();
-//    }
+    @Override
+    public ArrayList<ScorerCache> getCache() {
+        updateCache();
+        return super.getCache();
+    }
 }

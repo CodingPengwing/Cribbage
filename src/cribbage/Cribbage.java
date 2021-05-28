@@ -166,8 +166,6 @@ public class Cribbage extends CardGame {
 	private final ArrayList<ArrayList<Card>> playerDiscards = new ArrayList<>();
 
 
-
-
 	final Font normalFont = new Font("Serif", Font.BOLD, 24);
 	final Font bigFont = new Font("Serif", Font.BOLD, 36);
 
@@ -366,27 +364,37 @@ public class Cribbage extends CardGame {
 	}
 
 	void showHandsCrib() {
-		gameInfo.currentGamePhase = GamePhase.SHOW;
-
 		// Scoring
 		// Reward players based on their hands and show-phase scoring rules
 		Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
 		int nonDealer = 0;
 		int dealer = 1;
-		// First score the non-dealer's hand
-		gameInfo.currentGamePhase = GamePhase.SHOW_SCORE;
-		addToPlayerScore(nonDealer, scorer.evaluate(startHands[nonDealer]));
-		gameInfo.currentGamePhase = GamePhase.SHOW;
+		// First show and score the non-dealer's hand
+		showAndScore(nonDealer, startHands[nonDealer]);
 		// Then the dealer's hand
-		gameInfo.currentGamePhase = GamePhase.SHOW_SCORE;
-		addToPlayerScore(dealer, scorer.evaluate(startHands[dealer]));
-		gameInfo.currentGamePhase = GamePhase.SHOW;
+		showAndScore(dealer, startHands[dealer]);
 		// Finally the crib gets scored for the dealer
 		Hand cribAndStarter = copyHand(crib);
 		cribAndStarter.insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
-		gameInfo.currentGamePhase = GamePhase.SHOW_SCORE;
-		addToPlayerScore(dealer, scorer.evaluate(cribAndStarter));
-		gameInfo.currentGamePhase = GamePhase.SHOW;
+		showAndScore(dealer, cribAndStarter);
+	}
+
+	private void showAndScore(int playerNo, Hand hand) {
+		// Assess this player's start hand and score it
+		gameInfo.currentPlayer = playerNo;
+		gameInfo.updateGamePhase(GamePhase.SHOW);
+		// log the show event
+		logManager.update();
+		// ----> we are in SHOW_SCORE phase
+		gameInfo.updateGamePhase(GamePhase.SHOW_SCORE);
+		// calculate a score for their starter hand
+		Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
+		int score = scorer.evaluate(hand);
+		// log the score for their starter hand
+		logManager.update();
+		// update the player's score
+		addToPlayerScore(playerNo, score);
+		scorer.clearCache();
 	}
 
 	public Cribbage()
@@ -530,6 +538,10 @@ public class Cribbage extends CardGame {
 
 	public Hand[] getHands() {
 		return hands;
+	}
+
+	public Hand[] getStartHands() {
+		return startHands;
 	}
 
 

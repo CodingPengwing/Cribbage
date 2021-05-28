@@ -18,7 +18,7 @@ class ScoreLogger extends Logger {
             // Not a scoring phase, return
             default: return;
         }
-        System.out.println("HELLo");
+
         Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
         ArrayList<ScorerCache> cacheList = scorer.getCache();
         int currentPlayerScore = cribbage.getGameInfo().getCurrentPlayerScore();
@@ -29,13 +29,13 @@ class ScoreLogger extends Logger {
             // add the player
             logString += "P" + cribbage.getGameInfo().getCurrentPlayer() + ",";
             // add the player's score
-            logString += currentPlayerScore + ",";
             currentPlayerScore += cache.getScore();
+            logString += currentPlayerScore + ",";
             // add the new awarded score
             logString += cache.getScore() + ",";
             // add the new awarded score's cardList
             logString += cache.getScoreType();
-            if (cribbage.getGameInfo().getGamePhase() == Cribbage.GamePhase.SHOW) {
+            if (cribbage.getGameInfo().getGamePhase() == Cribbage.GamePhase.SHOW_SCORE) {
                 logString += "," + cardArrayListToString(cache.getCards());
             }
             printlnLog(logString);
