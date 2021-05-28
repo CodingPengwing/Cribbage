@@ -2,9 +2,6 @@ package cribbage.Log;
 
 import ch.aplu.jcardgame.Card;
 import cribbage.Cribbage;
-import cribbage.Score.Scorer;
-import cribbage.Score.ScorerCache;
-import cribbage.Score.ScorerCompositeFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -14,20 +11,14 @@ import java.util.ArrayList;
 abstract class Logger {
     protected static Cribbage cribbage;
     protected static final String LOG_FILE = "cribbage.log";
-//    private ArrayList<Logger> loggers = new ArrayList<>();
-
-//    public Logger(Cribbage cribbage) {
-//        this.cribbage = cribbage;
-//    }
 
 
     public abstract void update();
 
     protected final void resetLog() {
         try {
-            FileWriter fileWriter = new FileWriter(LOG_FILE);
-            // BufferedWriter writer = new BufferedWriter(fileWriter);
-            // writer.close();
+            // this just resets the file to be empty
+            new FileWriter(LOG_FILE);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -35,6 +26,7 @@ abstract class Logger {
 
     protected final void printlnLog(String logString) {
         try {
+            // open the file and write into it
             FileWriter fileWriter = new FileWriter(LOG_FILE, true);
             BufferedWriter writer = new BufferedWriter(fileWriter);
             writer.write(logString + "\n");

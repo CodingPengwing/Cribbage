@@ -504,11 +504,6 @@ public class Cribbage extends CardGame {
 		return players;
 	}
 
-//	private void notifyLoggers() {
-//		for (Logger l: loggers) {
-//			l.update();
-//		}
-//	}
 
 	public GameInformation getGameInfo() {
 		return gameInfo;

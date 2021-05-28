@@ -34,9 +34,9 @@ class ScoreLogger extends Logger {
             // add the new awarded score
             logString += cache.getScore() + ",";
             // add the new awarded score's cardList
-            logString += cache.getScoreType() + ",";
+            logString += cache.getScoreType();
             if (cribbage.getGameInfo().getGamePhase() == Cribbage.GamePhase.SHOW) {
-                logString += cardArrayListToString(cache.getCards());
+                logString += "," + cardArrayListToString(cache.getCards());
             }
             printlnLog(logString);
         }

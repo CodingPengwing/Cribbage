@@ -14,6 +14,7 @@ public class LogManager extends Logger {
         loggers.add(new StartLogger());
         loggers.add(new PlayLogger());
         loggers.add(new ScoreLogger());
+//        loggers.add(new ShowLogger());
     }
 
     @Override
