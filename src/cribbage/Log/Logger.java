@@ -10,8 +10,7 @@ import java.util.ArrayList;
 
 abstract class Logger {
     protected static Cribbage cribbage;
-    protected static final String LOG_FILE = "cribbage.log";
-
+    protected static String LOG_FILE;
 
     public abstract void update();
 
@@ -36,16 +35,5 @@ abstract class Logger {
             e.printStackTrace();
         }
     }
-
-//    protected final String cardArrayListToString(ArrayList<Card> cardList) {
-//        String str = "[";
-//        for (int i = 0; i < cardList.size(); i++) {
-//            str += Cribbage.getInstance().canonical(cardList.get(i));
-//            if (i < cardList.size()-1) str += ",";
-//        }
-//        str += "]";
-//        return str;
-//    }
-
 }
 

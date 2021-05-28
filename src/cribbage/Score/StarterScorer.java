@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /** Scorer for the starter card being a Jack */
 public class StarterScorer extends Scorer {
-    private final static int SCORE = 2;
+    private final static int SCORE = Cribbage.getPropertyInt("starterScore");
     private static final String STARTER_STR = "starter";
 
     /**

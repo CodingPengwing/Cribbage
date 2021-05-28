@@ -2,6 +2,7 @@ package cribbage.Score;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import cribbage.Cribbage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +14,9 @@ public class PairScorer extends Scorer {
     protected final static int TRIPLET = 3;
     protected final static int QUAD = 4;
     // The score for each pair type
-    // TODO: TAKE THIS CONSTANTS FROM A PROPERTY FILE
-    protected static final int PAIR_SCORE = 2;
-    protected static final int TRIPLET_SCORE = 6;
-    protected static final int QUAD_SCORE = 12;
+    protected static final int PAIR_SCORE = Cribbage.getPropertyInt("pair2Score");
+    protected static final int TRIPLET_SCORE = Cribbage.getPropertyInt("pair3Score");
+    protected static final int QUAD_SCORE = Cribbage.getPropertyInt("pair4Score");
     // Strings representing the the various pair types
     protected final static String PAIR_STR = "pair2";
     protected final static String TRIPLET_STR = "pair3";

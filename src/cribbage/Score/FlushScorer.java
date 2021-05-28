@@ -10,9 +10,8 @@ import java.util.ArrayList;
 public class FlushScorer extends Scorer {
     private static final int FLUSH4 = 4;
     private static final int FLUSH5 = 5;
-    // TODO: GET THESE FROM PROPERTY FILE
-    private static final int FLUSH4_SCORE = 4;
-    private static final int FLUSH5_SCORE = 5;
+    private static final int FLUSH4_SCORE = Cribbage.getPropertyInt("flush4Score");
+    private static final int FLUSH5_SCORE = Cribbage.getPropertyInt("flush5Score");
     private static final String FLUSH4_STR = "flush4";
     private static final String FLUSH5_STR = "flush5";
 

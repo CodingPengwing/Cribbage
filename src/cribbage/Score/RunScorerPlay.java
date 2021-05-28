@@ -9,12 +9,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class RunScorerPlay extends RunScorer {
-    // During the play phase, runs of up to 7 are allowed
-    @Override
-    protected int getMaxRun() {
-        return 7;
-    }
-
     // Returns the largest run from the end of the given hand that is not interrupted by a pair. If no such runs exist,
     // the empty array is returned
     private Card[] getLongestRunFromEnd(Hand hand) {

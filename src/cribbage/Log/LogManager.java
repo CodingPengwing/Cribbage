@@ -9,6 +9,7 @@ public class LogManager extends Logger {
 
     public LogManager(Cribbage cribbage) {
         super.cribbage = cribbage;
+        super.LOG_FILE = Cribbage.getProperty("logFile");
         resetLog();
         loggers.add(new SetUpLogger());
         loggers.add(new StartLogger());

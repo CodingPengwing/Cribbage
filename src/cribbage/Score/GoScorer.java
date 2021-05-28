@@ -1,10 +1,11 @@
 package cribbage.Score;
 
 import ch.aplu.jcardgame.Hand;
+import cribbage.Cribbage;
 
 /** Scores a "go" */
 public class GoScorer extends Scorer {
-    private static final int GO_SCORE = 1;
+    private static final int GO_SCORE = Cribbage.getPropertyInt("goScore");
     private static final String GO_STR = "go";
 
     /**

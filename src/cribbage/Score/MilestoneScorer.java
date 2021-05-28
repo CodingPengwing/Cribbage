@@ -11,11 +11,10 @@ import java.util.Collections;
 /** Concrete Strategy class for checking if the current segment has reached an exact milestone value and scoring it
  * correctly if so */
 public class MilestoneScorer extends Scorer{
-
     protected static final int THIRTY_ONE = 31;
     protected static final int FIFTEEN = 15;
-    // TODO: GET THIS FROM PROPERTIES
-    protected static final int POINTS = 2;
+    protected static final int FIFTEEN_SCORE = Cribbage.getPropertyInt("fifteenScore");
+    protected static final int THIRTYONE_SCORE = Cribbage.getPropertyInt("thirtyoneScore");
     private static final int MAX_COMB_SIZE = 5;
     private static final int MIN_COMB_SIZE = 2;
     protected static final String FIFTEEN_STR = "fifteen";
@@ -105,8 +104,8 @@ public class MilestoneScorer extends Scorer{
         ArrayList<ArrayList<Card>> fifteenCombs = getFifteenCombinations(hand);
 
         for (ArrayList<Card> comb: fifteenCombs) {
-            addToCache(POINTS, FIFTEEN_STR, comb, new ScorerCache.CacheComparatorAlphabetical());
+            addToCache(FIFTEEN_SCORE, FIFTEEN_STR, comb, new ScorerCache.CacheComparatorAlphabetical());
         }
-        return POINTS * fifteenCombs.size();
+        return FIFTEEN_SCORE * fifteenCombs.size();
     }
 }

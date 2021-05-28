@@ -476,14 +476,8 @@ public class Cribbage extends CardGame {
 		/* Handle Properties */
 		// System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
-		// Default properties
-		cribbageProperties.setProperty("Animate", "true");
-		cribbageProperties.setProperty("Player0", "cribbage.RandomPlayer");
-		cribbageProperties.setProperty("Player1", "cribbage.HumanPlayer");
-		// Default advanced settings
-		cribbageProperties.setProperty("nPlayers", "2");
-		cribbageProperties.setProperty("nStartCards", "6");
-		cribbageProperties.setProperty("nDiscards", "2");
+		// Set teh default properties
+		setDefaults();
 
 		// Read properties
 		try (FileReader inStream = new FileReader("cribbage.properties")) {
@@ -521,6 +515,38 @@ public class Cribbage extends CardGame {
 	}
 
 	// New methods -----------------------------------------------------------------------------------------------------
+	private static void setDefaults(){
+		// Default properties
+		cribbageProperties.setProperty("Animate", "true");
+		cribbageProperties.setProperty("Player0", "cribbage.RandomPlayer");
+		cribbageProperties.setProperty("Player1", "cribbage.HumanPlayer");
+		// Default advanced settings
+		cribbageProperties.setProperty("logFile", "cribbage.log");
+		cribbageProperties.setProperty("flush4Score", "4");
+		cribbageProperties.setProperty("flush5Score", "5");
+		cribbageProperties.setProperty("starter", "1");
+		cribbageProperties.setProperty("goScore", "1");
+		cribbageProperties.setProperty("jackStarterSuitScore", "1");
+		cribbageProperties.setProperty("fifteenScore", "2");
+		cribbageProperties.setProperty("thirtyoneScore", "2");
+		cribbageProperties.setProperty("pair2Score", "2");
+		cribbageProperties.setProperty("pair3Score", "6");
+		cribbageProperties.setProperty("pair4Score", "12");
+		cribbageProperties.setProperty("run3Score", "3");
+		cribbageProperties.setProperty("run4Score", "4");
+		cribbageProperties.setProperty("run5Score", "5");
+		cribbageProperties.setProperty("run6Score", "6");
+		cribbageProperties.setProperty("run7Score", "7");
+	}
+
+	public static String getProperty(String property) {
+		return cribbageProperties.getProperty(property);
+	}
+
+	public static int getPropertyInt(String property) {
+		return Integer.parseInt(cribbageProperties.getProperty(property));
+	}
+
 	/**
 	 * Returns a copy of the given Hand based on the Deck used by the Cribbage game instance
 	 * @param hand The Hand to copy

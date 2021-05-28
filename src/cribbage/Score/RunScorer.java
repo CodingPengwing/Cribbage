@@ -2,6 +2,7 @@ package cribbage.Score;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import cribbage.Cribbage;
 
 import java.util.*;
 
@@ -10,17 +11,8 @@ public class RunScorer extends Scorer {
     protected static final String RUN_STR = "run";
     // A map of each run (key) and its respective reward score (value)
     private static final HashMap<Integer, Integer> RUN_SCORES = new HashMap<>();
-
-    // Returns the maximum run size allowed. Defined as a method so that it can be overridden by child classes
-    protected int getMaxRun() {
-        return 5;
-    }
-
-    // The minimum run size allowed. The jcardgame framework used only supports sequences of size 3 or larger for their
-    // sequence methods, which happens to align with the minimum run size in Cribbage
-    protected int getMinRun() {
-        return 3;
-    }
+    protected int MAX_RUN = 7;
+    protected int MIN_RUN = 3;
 
     // Returns the map of runs and their respective scores
     protected HashMap<Integer, Integer> getRunScores() {
@@ -32,17 +24,14 @@ public class RunScorer extends Scorer {
      */
     public RunScorer() {
         // The scores for respective runs, Change these value to change the reward score for a particular run
-        RUN_SCORES.put(3,3);
-        RUN_SCORES.put(4,4);
-        RUN_SCORES.put(5,5);
-        RUN_SCORES.put(6,6);
-        RUN_SCORES.put(7,7);
+        for (int i = MIN_RUN; i <= MAX_RUN; i++)
+            RUN_SCORES.put(i, Cribbage.getPropertyInt("run"+i+"Score"));
     }
 
     // Returns a list of all possible runs in the given hand
     protected ArrayList<Card[]> getAllRuns(Hand hand) {
         ArrayList<Card[]> allRuns = new ArrayList<>();
-        for (int i = getMaxRun(); i >= getMinRun(); i--) {
+        for (int i = MAX_RUN; i >= MIN_RUN; i--) {
             allRuns.addAll(hand.getSequences(i));
         }
 

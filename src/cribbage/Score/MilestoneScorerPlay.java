@@ -17,11 +17,11 @@ public class MilestoneScorerPlay extends MilestoneScorer {
         clearCache();
         switch (Cribbage.total(hand)) {
             case FIFTEEN:
-                addToCache(POINTS, FIFTEEN_STR, null);
-                return POINTS;
+                addToCache(FIFTEEN_SCORE, FIFTEEN_STR, null);
+                return FIFTEEN_SCORE;
             case THIRTY_ONE:
-                addToCache(POINTS, THIRTYONE_STR, null);
-                return POINTS;
+                addToCache(THIRTYONE_SCORE, THIRTYONE_STR, null);
+                return THIRTYONE_SCORE;
             default:
                 return 0;
         }
