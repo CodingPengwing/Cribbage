@@ -8,10 +8,17 @@ import cribbage.Score.ScorerCompositeFactory;
 
 import java.util.ArrayList;
 
-public class ScoreLogger extends Logger {
+class ScoreLogger extends Logger {
 
     @Override
     public void update() {
+        // Check that the current gamePhase is a scoring phase
+        switch (cribbage.getGamePhase()) {
+            case PLAY_SCORE: case SHOW_SCORE: break;
+            // Not a scoring phase, return
+            default: return;
+        }
+
         Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
         ArrayList<ScorerCache> cacheList = scorer.getCache();
         int currentScore = cribbage.getGameInfo().getCurrentPlayerScore();
@@ -25,7 +32,7 @@ public class ScoreLogger extends Logger {
             currentScore += cache.getScore();
             logString += cache.getScore() + ",";
             if (cribbage.getGameInfo().getGamePhase() == Cribbage.GamePhase.SHOW) {
-                logString += cache.cardsToString();
+                logString += cardArrayListToString(cache.getCards());
             }
         }
         // TODO: print(logString) into log file

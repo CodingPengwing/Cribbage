@@ -39,14 +39,4 @@ public class ScorerCache {
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
-
-    public String cardsToString() {
-        String str = "[";
-        for (int i = 0; i < cards.size(); i++) {
-            str += Cribbage.getInstance().canonical(cards.get(i));
-            if (i < cards.size()-1) str += ",";
-        }
-        str += "]";
-        return str;
-    }
 }

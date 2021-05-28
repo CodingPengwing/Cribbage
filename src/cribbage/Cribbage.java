@@ -4,11 +4,9 @@ package cribbage;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
-import cribbage.Log.Logger;
+import cribbage.Log.LogManager;
 import cribbage.Score.Scorer;
-import cribbage.Score.ScorerComposite;
 import cribbage.Score.ScorerCompositeFactory;
-import cribbage.Score.ScorerFactory;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,7 +21,7 @@ public class Cribbage extends CardGame {
 	static Cribbage cribbage;	// Provide access to singleton
 
 	/** An enum for representing the phase of the game */
-	public enum GamePhase { DEAL, DISCARD, STARTER, PLAY, PLAY_GO, SHOW, SCORE_PLAY, SCORE_SHOW }
+	public enum GamePhase { SETUP, START, PLAY, PLAY_GO, PLAY_SCORE, SHOW, SHOW_SCORE}
 	public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES }
 	public enum Rank {
 		// Order of cards is tied to card images
@@ -52,7 +50,7 @@ public class Cribbage extends CardGame {
 		public GamePhase getGamePhase() {
 			return currentGamePhase;
 		}
-		private void updateGamePhase(GamePhase phase) { currentGamePhase = phase; };
+		void updateGamePhase(GamePhase phase) { currentGamePhase = phase; };
 	}
 
 	public static int cardValue(Card c) { return ((Cribbage.Rank) c.getRank()).value; }
@@ -155,14 +153,20 @@ public class Cribbage extends CardGame {
 	private final Actor[] scoreActors = {null, null}; //, null, null };
 	private final Location textLocation = new Location(350, 450);
 	private final Hand[] hands = new Hand[nPlayers];
-	private final Hand[] initialHands = new Hand[nPlayers];
+	private final Hand[] startHands = new Hand[nPlayers];
 	private Hand starter;
 	private Hand crib;
 
 	public static void setStatus(String string) { cribbage.setStatusText(string); }
 
-	static private final IPlayer[] players = new IPlayer[nPlayers];
+	private final LogManager logManager = new LogManager(this);
+	private static final IPlayer[] players = new IPlayer[nPlayers];
 	private final int[] scores = new int[nPlayers];
+	private static final String[] playerTypes = new String[nPlayers];
+	private final ArrayList<ArrayList<Card>> playerDiscards = new ArrayList<>();
+
+
+
 
 	final Font normalFont = new Font("Serif", Font.BOLD, 24);
 	final Font bigFont = new Font("Serif", Font.BOLD, 36);
@@ -183,13 +187,9 @@ public class Cribbage extends CardGame {
 
 
 
-	private void doAction() {
-
-	}
 
 
 	private void deal(Hand pack, Hand[] hands) {
-		gameInfo.currentGamePhase = GamePhase.DEAL;
 		for (int i = 0; i < nPlayers; i++) {
 			hands[i] = new Hand(deck);
 			// players[i] = (1 == i ? new HumanPlayer() : new RandomPlayer());
@@ -215,23 +215,28 @@ public class Cribbage extends CardGame {
 	}
 
 	private void discardToCrib() {
-		gameInfo.currentGamePhase = GamePhase.DISCARD;
 		crib = new Hand(deck);
 		RowLayout layout = new RowLayout(cribLocation, cribWidth);
 		layout.setRotationAngle(0);
 		crib.setView(this, layout);
 		// crib.setTargetArea(cribTarget);
 		crib.draw();
-		for (IPlayer player: players) {
-			for (int i = 0; i < nDiscards; i++) {
-				transfer(player.discard(), crib);
+
+		for (IPlayer player : players) {
+			// process the discards for each player
+			ArrayList<Card> discards = new ArrayList<>();
+			for (int j = 0; j < nDiscards; j++) {
+				Card discard = player.discard();
+				transfer(discard, crib);
+				discards.add(discard);
 			}
+			// Add the discards to the playDiscards array list
+			playerDiscards.add(discards);
 			crib.sort(Hand.SortType.POINTPRIORITY, true);
 		}
 	}
 
 	private void starter(Hand pack) {
-		gameInfo.currentGamePhase = GamePhase.STARTER;
 		starter = new Hand(deck);	// if starter is a Jack, the dealer gets 2 points
 		RowLayout layout = new RowLayout(starterLocation, 0);
 		layout.setRotationAngle(0);
@@ -243,8 +248,8 @@ public class Cribbage extends CardGame {
 
 		// Copy the initial hands of players so that scoring can be done during show, and add the starter card to them
 		for (int i = 0; i < hands.length; i++) {
-			initialHands[i] = copyHand(hands[i]);
-			initialHands[i].insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
+			startHands[i] = copyHand(hands[i]);
+			startHands[i].insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
 		}
 
 		// Scoring
@@ -311,7 +316,7 @@ public class Cribbage extends CardGame {
 
 				// Scoring
 				// Score and potentially rewards the last player who played card based on play-phase scoring
-				gameInfo.currentGamePhase = GamePhase.SCORE_PLAY;
+				gameInfo.currentGamePhase = GamePhase.PLAY_SCORE;
 				addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(s.segment));
 
 				if (total(s.segment) == thirtyone) {
@@ -341,17 +346,17 @@ public class Cribbage extends CardGame {
 		int nonDealer = 0;
 		int dealer = 1;
 		// First score the non-dealer's hand
-		gameInfo.currentGamePhase = GamePhase.SCORE_SHOW;
-		addToPlayerScore(nonDealer, scorer.evaluate(initialHands[nonDealer]));
+		gameInfo.currentGamePhase = GamePhase.SHOW_SCORE;
+		addToPlayerScore(nonDealer, scorer.evaluate(startHands[nonDealer]));
 		gameInfo.currentGamePhase = GamePhase.SHOW;
 		// Then the dealer's hand
-		gameInfo.currentGamePhase = GamePhase.SCORE_SHOW;
-		addToPlayerScore(dealer, scorer.evaluate(initialHands[dealer]));
+		gameInfo.currentGamePhase = GamePhase.SHOW_SCORE;
+		addToPlayerScore(dealer, scorer.evaluate(startHands[dealer]));
 		gameInfo.currentGamePhase = GamePhase.SHOW;
 		// Finally the crib gets scored for the dealer
 		Hand cribAndStarter = copyHand(crib);
 		cribAndStarter.insert(starter.getFirst().getSuit(), starter.getFirst().getRank(), false);
-		gameInfo.currentGamePhase = GamePhase.SCORE_SHOW;
+		gameInfo.currentGamePhase = GamePhase.SHOW_SCORE;
 		addToPlayerScore(dealer, scorer.evaluate(cribAndStarter));
 		gameInfo.currentGamePhase = GamePhase.SHOW;
 	}
@@ -373,10 +378,16 @@ public class Cribbage extends CardGame {
 		addActor(new TextActor("Seed: " + SEED, Color.BLACK, bgColor, normalFont), seedLocation);
 
 		/* Play the round */
+		gameInfo.updateGamePhase(GamePhase.SETUP);
 		deal(pack, hands);
+		logManager.update();
+		gameInfo.updateGamePhase(GamePhase.START);
 		discardToCrib();
 		starter(pack);
+		logManager.update();
+		gameInfo.updateGamePhase(GamePhase.PLAY);
 		play();
+		gameInfo.updateGamePhase(GamePhase.SHOW);
 		showHandsCrib();
 
 		addActor(new Actor("sprites/gameover.gif"), textLocation);
@@ -419,9 +430,11 @@ public class Cribbage extends CardGame {
 
 		// Control Player Types
 		Class<?> clazz;
-		clazz = Class.forName(cribbageProperties.getProperty("Player0"));
+		playerTypes[0] = cribbageProperties.getProperty("Player0");
+		clazz = Class.forName(playerTypes[0]);
 		players[0] = (IPlayer) clazz.getConstructor().newInstance();
-		clazz = Class.forName(cribbageProperties.getProperty("Player1"));
+		playerTypes[1] = cribbageProperties.getProperty("Player1");
+		clazz = Class.forName(playerTypes[1]);
 		players[1] = (IPlayer) clazz.getConstructor().newInstance();
 		// End properties
 
@@ -479,9 +492,25 @@ public class Cribbage extends CardGame {
 	 * @param score The score to add
 	 */
 	public void addToPlayerScore(int playerID, int score) {
-		System.out.println("adding player " + playerID + " score " +score);
 //		notifyLoggers();
 		scores[playerID] += score;
 		updateScoreDisplay(playerID);
+	}
+
+	public static int getSEED() {
+		return SEED;
+	}
+
+	public ArrayList<String> getPlayerTypes() {
+		return new ArrayList<>(Arrays.asList(playerTypes));
+	}
+
+	public Hand[] getHands() {
+		return hands;
+	}
+
+
+	public ArrayList<ArrayList<Card>> getPlayerDiscards() {
+		return new ArrayList<>(playerDiscards);
 	}
 }
