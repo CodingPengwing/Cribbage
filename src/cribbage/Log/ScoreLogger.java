@@ -15,7 +15,7 @@ public class ScoreLogger extends Logger {
         Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
         ArrayList<ScorerCache> cacheList = scorer.getCache();
         int currentScore = cribbage.getGameInfo().getCurrentPlayerScore();
-        Cribbage.GamePhase currentGamePhase = cribbage.getGamePhase();
+        Cribbage.GamePhase currentGamePhase = cribbage.getGameInfo().getGamePhase();
 
         for (ScorerCache cache : cacheList) {
             String logString = "score,";
@@ -24,7 +24,7 @@ public class ScoreLogger extends Logger {
             logString += currentScore + ",";
             currentScore += cache.getScore();
             logString += cache.getScore() + ",";
-            if (cribbage.getGamePhase() == Cribbage.GamePhase.SHOW) {
+            if (cribbage.getGameInfo().getGamePhase() == Cribbage.GamePhase.SHOW) {
                 logString += cache.cardsToString();
             }
         }

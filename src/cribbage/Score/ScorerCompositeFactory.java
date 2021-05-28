@@ -55,11 +55,13 @@ public class ScorerCompositeFactory {
         ScorerFactory scorerFactory = ScorerFactory.getInstance();
         Cribbage cribbage = Cribbage.getInstance();
         switch (cribbage.getGamePhase()) {
-            case PLAY: return getScorerCompositePlay();
+            case PLAY: case SCORE_PLAY: return getScorerCompositePlay();
             case PLAY_GO: return scorerFactory.getGoScorer();
             case STARTER: return scorerFactory.getStarterScorer();
-            case SHOW: return getScorerCompositeShow();
-            default: return null;
+            case SHOW: case SCORE_SHOW: return getScorerCompositeShow();
+            default:
+                System.err.println("Returning null scorer composite.");
+                return null;
         }
     }
 }

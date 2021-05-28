@@ -24,9 +24,7 @@ public class Cribbage extends CardGame {
 
 	/** An enum for representing the phase of the game */
 	public enum GamePhase { DEAL, DISCARD, STARTER, PLAY, PLAY_GO, SHOW, SCORE_PLAY, SCORE_SHOW }
-
 	public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES }
-
 	public enum Rank {
 		// Order of cards is tied to card images
 		ACE(1,1), KING(13,10), QUEEN(12,10), JACK(11,10), TEN(10,10), NINE(9,9), EIGHT(8,8), SEVEN(7,7), SIX(6,6), FIVE(5,5), FOUR(4,4), THREE(3,3), TWO(2,2);
@@ -46,22 +44,19 @@ public class Cribbage extends CardGame {
 		public int getCurrentPlayerScore() {
 			return scores[currentPlayer];
 		}
-
 		public int getCurrentPlayer() {
 			return currentPlayer;
 		}
+
+		/** @return The current phase of the game */
+		public GamePhase getGamePhase() {
+			return currentGamePhase;
+		}
+		private void updateGamePhase(GamePhase phase) { currentGamePhase = phase; };
 	}
 
 	public static int cardValue(Card c) { return ((Cribbage.Rank) c.getRank()).value; }
 
-	/**
-	 * Returns the order (where it fits in the ordering of cards) of the given card
-	 * @param c The card to find the order of
-	 * @return The order of the card
-	 */
-	public static int cardOrder(Card c) {
-		return ((Cribbage.Rank) c.getRank()).order;
-	}
 
 	/*
 	Canonical String representations of Suit, Rank, Card, and Hand
@@ -172,7 +167,7 @@ public class Cribbage extends CardGame {
 	final Font normalFont = new Font("Serif", Font.BOLD, 24);
 	final Font bigFont = new Font("Serif", Font.BOLD, 36);
 
-	private void initScore() {
+	private void initScoreDisplay() {
 		for (int i = 0; i < nPlayers; i++) {
 			scores[i] = 0;
 			scoreActors[i] = new TextActor("0", Color.WHITE, bgColor, bigFont);
@@ -180,7 +175,7 @@ public class Cribbage extends CardGame {
 		}
 	}
 
-	private void updateScore(int player) {
+	private void updateScoreDisplay(int player) {
 		removeActor(scoreActors[player]);
 		scoreActors[player] = new TextActor(String.valueOf(scores[player]), Color.WHITE, bgColor, bigFont);
 		addActor(scoreActors[player], scoreLocations[player]);
@@ -188,9 +183,9 @@ public class Cribbage extends CardGame {
 
 
 
+	private void doAction() {
 
-
-
+	}
 
 
 	private void deal(Hand pack, Hand[] hands) {
@@ -283,6 +278,7 @@ public class Cribbage extends CardGame {
 	}
 
 	private void play() {
+		gameInfo.currentGamePhase = GamePhase.PLAY;
 		final int thirtyone = 31;
 		List<Hand> segments = new ArrayList<>();
 		gameInfo.currentPlayer = 0; // Player 1 is dealer
@@ -302,7 +298,8 @@ public class Cribbage extends CardGame {
 					// Since neither player can play another card without going over the limit, the last player who
 					// Played a card gets a point(s) for "go"
 					gameInfo.currentGamePhase = GamePhase.PLAY_GO;
-					addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(hands[s.lastPlayer]));
+//					addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(hands[s.lastPlayer]));
+					addToPlayerScore(s.lastPlayer, ScorerCompositeFactory.getInstance().getScorerComposite().evaluate(starter));
 				} else {
 					// currentPlayer says "go"
 					s.go = true;
@@ -365,7 +362,7 @@ public class Cribbage extends CardGame {
 		cribbage = this;
 		setTitle("Cribbage (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
 		setStatusText("Initializing...");
-		initScore();
+		initScoreDisplay();
 
 		Hand pack = deck.toHand(false);
 		RowLayout layout = new RowLayout(starterLocation, 0);
@@ -482,8 +479,9 @@ public class Cribbage extends CardGame {
 	 * @param score The score to add
 	 */
 	public void addToPlayerScore(int playerID, int score) {
+		System.out.println("adding player " + playerID + " score " +score);
 //		notifyLoggers();
 		scores[playerID] += score;
-		updateScore(playerID);
+		updateScoreDisplay(playerID);
 	}
 }
