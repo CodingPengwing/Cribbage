@@ -548,4 +548,24 @@ public class Cribbage extends CardGame {
 	public ArrayList<ArrayList<Card>> getPlayerDiscards() {
 		return new ArrayList<>(playerDiscards);
 	}
+
+	/**
+	 * Returns a sorted list of cards based on the given card list and sort type
+	 * @param cardList List of cards to sort
+	 * @param sortType The ordering to sort by
+	 * @return Sorted card list
+	 */
+	public ArrayList<Card> sortCardList(ArrayList<Card> cardList, Hand.SortType sortType) {
+		// Create a new hand from the given card list
+		Hand tempHand = new Hand(deck);
+		for (Card c: cardList) {
+			tempHand.insert(c.getSuit(), c.getRank(), false);
+		}
+
+		// Now sort the hand based on the given sort type
+		tempHand.sort(sortType, false);
+		// Finally, return the sorted card list
+		return tempHand.getCardList();
+	}
+
 }

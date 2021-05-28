@@ -5,7 +5,7 @@ import cribbage.Cribbage;
 
 import java.util.ArrayList;
 
-public class ScorerCache {
+public class ScorerCache implements Comparable<ScorerCache> {
     private int score;
     private String scoreType;
     private ArrayList<Card> cards;
@@ -38,5 +38,17 @@ public class ScorerCache {
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
+    }
+
+    /** compares 2 cache objects by size and then by alphabetical order.
+     * @param o other cache object to compare to
+     * @return integer representing comparison
+     */
+    @Override
+    public int compareTo(ScorerCache o) {
+        if (this.cards.size() < o.cards.size()) return -1;
+        if (this.cards.size() > o.cards.size()) return 1;
+        // Now the sizes are equal
+        return this.cards.toString().compareTo(o.cards.toString());
     }
 }

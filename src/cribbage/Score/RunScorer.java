@@ -3,10 +3,7 @@ package cribbage.Score;
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 /** Assesses the runs in the given hand in accordance with the rules of the show phase */
 public class RunScorer extends Scorer {
@@ -52,6 +49,18 @@ public class RunScorer extends Scorer {
         return allRuns;
     }
 
+    @Override
+    protected void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
+        super.addToCache(score, scoreType, cardList);
+        Collections.sort(getCache());
+    }
+
+    @Override
+    protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
+        super.addAllToCache(cacheList);
+        Collections.sort(getCache());
+    }
+
     /**
      * Finds all runs of between 3 and 5 (inclusive) and returns an appropriate total score for them
      * @param hand The hand of cards to be evaluated
@@ -62,7 +71,6 @@ public class RunScorer extends Scorer {
         clearCache();
         int totalScore = 0;
         ArrayList<Card[]> allRuns = getAllRuns(hand);
-        // TODO: CHECK THE RUNS ARE IN CANONICAL ORDER
 
         for (Card[] run: allRuns) {
             ArrayList<Card> cardList = new ArrayList<>(Arrays.asList(run));

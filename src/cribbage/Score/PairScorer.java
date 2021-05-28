@@ -5,6 +5,7 @@ import ch.aplu.jcardgame.Hand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class PairScorer extends Scorer {
     // The size of each pair type
@@ -20,7 +21,19 @@ public class PairScorer extends Scorer {
     protected final static String PAIR_STR = "pair2";
     protected final static String TRIPLET_STR = "pair3";
     protected final static String QUAD_STR = "pair4";
-    
+
+    @Override
+    protected void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
+        super.addToCache(score, scoreType, cardList);
+        Collections.sort(getCache());
+    }
+
+    @Override
+    protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
+        super.addAllToCache(cacheList);
+        Collections.sort(getCache());
+    }
+
     /**
      */
     @Override

@@ -31,6 +31,7 @@ abstract class Logger {
             BufferedWriter writer = new BufferedWriter(fileWriter);
             writer.write(logString + "\n");
             writer.close();
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

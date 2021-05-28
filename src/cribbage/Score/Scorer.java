@@ -2,6 +2,7 @@ package cribbage.Score;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import cribbage.Cribbage;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -22,8 +23,14 @@ public abstract class Scorer {
     }
 
     protected void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
-        this.cache.add(new ScorerCache(score, scoreType, cardList));
+        if (cardList != null) {
+            ArrayList<Card> sortedCardList = Cribbage.getInstance().sortCardList(cardList, Hand.SortType.POINTPRIORITY);
+            this.cache.add(new ScorerCache(score, scoreType, sortedCardList));
+        } else {
+            this.cache.add(new ScorerCache(score, scoreType, null));
+        }
     }
+
 
     protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
         this.cache.addAll(cacheList);
