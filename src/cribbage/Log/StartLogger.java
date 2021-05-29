@@ -6,6 +6,9 @@ import cribbage.Score.ScorerCache;
 import cribbage.Score.ScorerCompositeFactory;
 import java.util.ArrayList;
 
+/**
+ * StartLogger is used for logging Start events (discarding 2 cards and picking starter cards).
+ */
 class StartLogger extends Logger {
     @Override
     void update() {

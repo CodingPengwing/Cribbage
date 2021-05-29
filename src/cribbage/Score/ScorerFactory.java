@@ -1,6 +1,8 @@
 package cribbage.Score;
 
-/** A Factory for creating all the different Scorer Strategies */
+/**
+ * Factory pattern. This class creates and gives internal access to concrete Scorers.
+ */
 class ScorerFactory {
     private static ScorerFactory instance = null;
 

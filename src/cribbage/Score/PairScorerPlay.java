@@ -8,6 +8,9 @@ import java.util.Collections;
 
 import java.util.ArrayList;
 
+/**
+ * Concrete Strategy class. Checks whether a segment hand ends with a Pair and scores it.
+ */
 class PairScorerPlay extends PairScorer {
     // Returns the number of cards which are of the same rank in a row starting from the back of the hand
     private ArrayList<Card> getLongestPairFromEnd(Hand hand) {

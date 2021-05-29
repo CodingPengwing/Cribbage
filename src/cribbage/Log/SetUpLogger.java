@@ -3,6 +3,9 @@ package cribbage.Log;
 import ch.aplu.jcardgame.Hand;
 import java.util.ArrayList;
 
+/**
+ * SetUpLogger is used for logging SetUp events (when the game is being set up).
+ */
 class SetUpLogger extends Logger {
     @Override
     void update() {

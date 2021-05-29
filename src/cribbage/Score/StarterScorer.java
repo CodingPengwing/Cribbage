@@ -6,7 +6,9 @@ import cribbage.Cribbage;
 
 import java.util.ArrayList;
 
-/** Scorer for the starter card being a Jack */
+/**
+ * Concrete Strategy class. Scores a starter card.
+ */
 class StarterScorer extends Scorer {
     private final static int STARTER_SCORE = Cribbage.getPropertyInt("starterScore");
     private static final String STARTER_STR = "starter";

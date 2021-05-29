@@ -6,7 +6,9 @@ import cribbage.Cribbage;
 
 import java.util.*;
 
-/** Assesses the runs in the given hand in accordance with the rules of the show phase */
+/**
+ * Concrete Strategy class. Checks a hand for combinations of Runs and scores them.
+ */
 class RunScorer extends Scorer {
     final static String RUN_STR = "run";
     // A map of each run (key) and its respective reward score (value)

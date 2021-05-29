@@ -3,6 +3,9 @@ package cribbage.Log;
 import ch.aplu.jcardgame.Card;
 import java.util.ArrayList;
 
+/**
+ * ShowLogger is used for logging Show events (when the hands are showed at the end of the game).
+ */
 class ShowLogger extends Logger {
     @Override
     void update() {

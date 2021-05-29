@@ -7,6 +7,9 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Concrete Strategy class. Checks whether a segment hand ends with a Run and scores it.
+ */
 class RunScorerPlay extends RunScorer {
     // Returns the largest run from the end of the given hand that is not interrupted by a pair. If no such runs exist,
     // the empty array is returned

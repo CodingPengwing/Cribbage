@@ -7,7 +7,11 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-/** For evaluating the score of the game of Cribbage in a particular situation */
+/**
+ * Strategy pattern. This class defines the behaviour of all Scorers. Scorers are
+ * to be given a Hand and are to return an integer value representing the worth
+ * of that hand.
+ */
 public abstract class Scorer {
     private final ArrayList<ScorerCache> cache = new ArrayList<>();
     /**

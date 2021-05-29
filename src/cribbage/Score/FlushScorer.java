@@ -6,7 +6,9 @@ import cribbage.Cribbage;
 
 import java.util.ArrayList;
 
-/** Performs scoring for flush */
+/**
+ * Concrete Strategy class. Scorer for Flush hands.
+ */
 class FlushScorer extends Scorer {
     private static final int FLUSH4 = 4;
     private static final int FLUSH5 = 5;

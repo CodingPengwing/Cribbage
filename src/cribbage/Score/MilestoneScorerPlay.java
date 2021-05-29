@@ -3,6 +3,10 @@ package cribbage.Score;
 import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
+/**
+ * Concrete Strategy class. Checks if the current segment (during Play) has reached an exact milestone
+ * value and scoring it if so (ie. segment reaching a sum of 15 or 31).
+ */
 class MilestoneScorerPlay extends MilestoneScorer {
     private static final String THIRTYONE_STR = "thirtyone";
 

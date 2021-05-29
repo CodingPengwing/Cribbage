@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-/** Concrete Strategy class for checking if the current segment has reached an exact milestone value and scoring it
- * correctly if so */
+/**
+ * Concrete Strategy class. Checks if the current segment has combinations that sum up to a value (15) and scores it
+ * if so.
+ */
 class MilestoneScorer extends Scorer {
     static final int THIRTY_ONE = 31;
     static final int FIFTEEN = 15;

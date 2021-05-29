@@ -8,6 +8,9 @@ import ch.aplu.jcardgame.Hand;
 
 // All Player related functionality has been made package-private
 
+/**
+ * Class for interactive human-controlled play through input devices.
+ */
 public class HumanPlayer extends IPlayer {
 	Card selected;
 

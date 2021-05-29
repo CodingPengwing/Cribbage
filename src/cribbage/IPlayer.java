@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 // All Player related functionality has been made package-private
 
+/**
+ * Class defining a Player object in a card game.
+ */
 abstract class IPlayer {
     int id;
     Deck deck; // Need this since can't get from hand to deck

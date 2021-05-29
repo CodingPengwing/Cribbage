@@ -6,6 +6,9 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * ScorerCache created specifically for Scorers to keep a history of what they had just scored previously.
+ */
 public class ScorerCache {
     private int score;
     private String scoreType;

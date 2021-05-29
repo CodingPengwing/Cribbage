@@ -4,7 +4,11 @@ import ch.aplu.jcardgame.Hand;
 
 import java.util.ArrayList;
 
-/** A Composite for Scorers */
+/**
+ * Composite Strategy pattern. This class defines the behaviour of all ScorerComposite.
+ * ScorerComposites work like Scorers by taking in a Hand and returning a value.
+ * However, they contain a list of Scorers that they use to sum a score.
+ */
 class ScorerComposite extends Scorer {
     private final ArrayList<Scorer> scorers = new ArrayList<>();
 

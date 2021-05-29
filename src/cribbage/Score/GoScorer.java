@@ -3,7 +3,9 @@ package cribbage.Score;
 import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
-/** Scores a "go" */
+/**
+ * Concrete Strategy class. Scores a "go".
+ */
 class GoScorer extends Scorer {
     private static final int GO_SCORE = Cribbage.getPropertyInt("goScore");
     private static final String GO_STR = "go";

@@ -7,6 +7,9 @@ import cribbage.Score.ScorerCompositeFactory;
 
 import java.util.ArrayList;
 
+/**
+ * ScoreLogger is used for logging Score events (when a player scores points, during either Play or Show stages).
+ */
 class ScoreLogger extends Logger {
     @Override
     void update() {

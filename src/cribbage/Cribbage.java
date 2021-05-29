@@ -17,6 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * The implementation of Cribbage, which conforms to a CardGame.
+ */
 public class Cribbage extends CardGame {
 
 	// ------------------------------------ Overarching logic of Cribbage -------------------------------------//
@@ -390,7 +393,7 @@ public class Cribbage extends CardGame {
 		return hands;
 	}
 
-	private final LogManager logManager = new LogManager(this);
+	private final LogManager logManager = LogManager.getInstance(this);
 	private static final IPlayer[] players = new IPlayer[nPlayers];
 	private final int[] scores = new int[nPlayers];
 	private static final String[] playerTypes = new String[nPlayers];

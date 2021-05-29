@@ -1,5 +1,8 @@
 package cribbage.Log;
 
+/**
+ * PlayLogger is used for logging Play events (when a player plays a card).
+ */
 class PlayLogger extends Logger {
     @Override
     void update() {

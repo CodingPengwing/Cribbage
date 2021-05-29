@@ -7,6 +7,9 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Concrete Strategy class. Checks a hand for combinations of Pairs and scores them.
+ */
 class PairScorer extends Scorer {
     // The size of each pair type
     final static int PAIR = 2;

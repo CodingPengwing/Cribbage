@@ -2,7 +2,9 @@ package cribbage.Score;
 
 import cribbage.Cribbage;
 
-/** A Factory for creating Scorer Composites */
+/**
+ * Factory pattern. This class creates and gives external access to ScorerComposites and Scorers.
+ */
 public class ScorerCompositeFactory {
     private static ScorerCompositeFactory instance = null;
 
@@ -25,7 +27,7 @@ public class ScorerCompositeFactory {
 
     // Factory methods ------------------------------------------------------------------------------
 
-    // /** A Composite for scoring during the show phase */
+    // ** Composite for scoring during the show phase **
     private Scorer getScorerCompositeShow() {
         if (scorerCompositeShow == null) {
             ScorerComposite composite = new ScorerComposite();
@@ -40,7 +42,7 @@ public class ScorerCompositeFactory {
         return scorerCompositeShow;
     }
 
-    // /** @return A Composite for scoring during the Play phase */
+    // ** Composite for scoring during the Play phase **
     private Scorer getScorerCompositePlay() {
         if (scorerCompositePlay == null) {
             ScorerComposite composite = new ScorerComposite();
