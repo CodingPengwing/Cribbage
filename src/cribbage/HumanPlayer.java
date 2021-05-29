@@ -1,3 +1,8 @@
+/**
+ * Modified by Hoang Dang (1080344) and Ehsan Soltani Abhari (1003877)
+ * Workshop 16 Team 06.
+ */
+
 package cribbage;
 
 import ch.aplu.jcardgame.Deck;
