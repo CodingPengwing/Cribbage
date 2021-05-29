@@ -6,9 +6,9 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 
 class SetUpLogger extends Logger {
-
     @Override
-    public void update() {
+    void update() {
+        // Check that the current gamePhase is a SETUP phase
         switch (cribbage.getGameInfo().getGamePhase()) {
             case SETUP: break;
             default: return;
@@ -35,6 +35,5 @@ class SetUpLogger extends Logger {
             logString += cribbage.canonical(hand.getCardList());
             printlnLog(logString);
         }
-
     }
 }

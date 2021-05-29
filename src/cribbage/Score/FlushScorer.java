@@ -7,14 +7,13 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 
 /** Performs scoring for flush */
-public class FlushScorer extends Scorer {
+class FlushScorer extends Scorer {
     private static final int FLUSH4 = 4;
     private static final int FLUSH5 = 5;
     private static final int FLUSH4_SCORE = Cribbage.getPropertyInt("flush4Score");
     private static final int FLUSH5_SCORE = Cribbage.getPropertyInt("flush5Score");
     private static final String FLUSH4_STR = "flush4";
     private static final String FLUSH5_STR = "flush5";
-
 
     /**
      * Returns the score for the largest flush in the given hand if it exists (must be at least of minimum flush size),

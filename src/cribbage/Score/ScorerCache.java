@@ -45,8 +45,10 @@ public class ScorerCache {
         }
     }
 
-
-    public ScorerCache(int score, String scoreType, ArrayList<Card> cards) {
+    /** Constructor for ScorerCache.
+     * This method has default access because ScorerCache should not be created outside of Score package.
+     * */
+    ScorerCache(int score, String scoreType, ArrayList<Card> cards) {
         this.score = score;
         this.scoreType = scoreType;
         this.cards = cards;
@@ -64,16 +66,16 @@ public class ScorerCache {
         return cards;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setScoreType(String scoreType) {
-        this.scoreType = scoreType;
-    }
-
-    public void setCards(ArrayList<Card> cards) {
-        this.cards = cards;
-    }
+//    public void setScore(int score) {
+//        this.score = score;
+//    }
+//
+//    public void setScoreType(String scoreType) {
+//        this.scoreType = scoreType;
+//    }
+//
+//    public void setCards(ArrayList<Card> cards) {
+//        this.cards = cards;
+//    }
 
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class RunScorerPlay extends RunScorer {
+class RunScorerPlay extends RunScorer {
     // Returns the largest run from the end of the given hand that is not interrupted by a pair. If no such runs exist,
     // the empty array is returned
     private Card[] getLongestRunFromEnd(Hand hand) {
@@ -59,7 +59,7 @@ public class RunScorerPlay extends RunScorer {
             return 0;
         }
         // Else add to cache and return
-        int score = getRunScores().get(longestRun.length);
+        int score = getRunScore(longestRun.length);
         addToCache(score, RUN_STR + longestRun.length, null);
         return score;
     }

@@ -10,7 +10,7 @@ import java.util.Collections;
 
 /** Concrete Strategy class for checking if the current segment has reached an exact milestone value and scoring it
  * correctly if so */
-public class MilestoneScorer extends Scorer{
+class MilestoneScorer extends Scorer {
     protected static final int THIRTY_ONE = 31;
     protected static final int FIFTEEN = 15;
     protected static final int FIFTEEN_SCORE = Cribbage.getPropertyInt("fifteenScore");

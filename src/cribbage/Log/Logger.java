@@ -9,12 +9,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 abstract class Logger {
-    protected static Cribbage cribbage;
-    protected static String LOG_FILE;
+    static Cribbage cribbage;
+    static String LOG_FILE;
 
-    public abstract void update();
+    /** Abstract method to be implemented by all children logger classes.
+     * Upon calling, the child logger needs to check whether it is their
+     * turn to log something, and carry out the logic to log it.
+     * */
+    abstract void update();
 
-    protected final void resetLog() {
+    final void resetLog() {
         try {
             // this just resets the file to be empty
             new FileWriter(LOG_FILE);
@@ -23,7 +27,7 @@ abstract class Logger {
         }
     }
 
-    protected final void printlnLog(String logString) {
+    final void printlnLog(String logString) {
         try {
             // open the file and write into it
             FileWriter fileWriter = new FileWriter(LOG_FILE, true);

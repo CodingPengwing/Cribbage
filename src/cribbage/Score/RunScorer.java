@@ -7,16 +7,16 @@ import cribbage.Cribbage;
 import java.util.*;
 
 /** Assesses the runs in the given hand in accordance with the rules of the show phase */
-public class RunScorer extends Scorer {
-    protected static final String RUN_STR = "run";
+class RunScorer extends Scorer {
+    final static String RUN_STR = "run";
     // A map of each run (key) and its respective reward score (value)
-    private static final HashMap<Integer, Integer> RUN_SCORES = new HashMap<>();
-    protected int MAX_RUN = 7;
-    protected int MIN_RUN = 3;
+    final static HashMap<Integer, Integer> RUN_SCORES = new HashMap<>();
+    final static int MAX_RUN = 7;
+    final static int MIN_RUN = 3;
 
     // Returns the map of runs and their respective scores
-    protected HashMap<Integer, Integer> getRunScores() {
-        return RUN_SCORES;
+    final static int getRunScore(int runLength) {
+        return RUN_SCORES.get(runLength);
     }
 
     /**

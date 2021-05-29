@@ -5,16 +5,18 @@ import ch.aplu.jcardgame.Hand;
 import java.util.ArrayList;
 
 /** A Composite for Scorers */
-public class ScorerComposite extends Scorer {
+class ScorerComposite extends Scorer {
     private final ArrayList<Scorer> scorers = new ArrayList<>();
 
-    public ScorerComposite() {}
+    /** Constructor for ScorerComposite, only usable inside the Score package.
+     */
+    ScorerComposite() {}
 
-    public void addScorer(Scorer scorer) {
+    final void addScorer(Scorer scorer) {
         scorers.add(scorer);
     }
 
-    public void removeScorer(Scorer scorer) {
+    final void removeScorer(Scorer scorer) {
         scorers.remove(scorer);
     }
 
@@ -31,6 +33,8 @@ public class ScorerComposite extends Scorer {
         return score;
     }
 
+    // Updates the cache of the composite by going through each Scorer in its
+    // list and adding their caches to its own cache.
     private void updateCache() {
         clearCache();
         for (Scorer scorer : scorers) {
@@ -38,6 +42,10 @@ public class ScorerComposite extends Scorer {
         }
     }
 
+    /** Updates the cache of the composite from all of its Scorers in the list.
+     * Then return that cache.
+     * @return cache - the list of all ScorerCaches contained in the composite.
+     */
     @Override
     public ArrayList<ScorerCache> getCache() {
         updateCache();

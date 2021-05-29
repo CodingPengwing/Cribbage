@@ -11,14 +11,13 @@ import java.util.ArrayList;
 class ScoreLogger extends Logger {
 
     @Override
-    public void update() {
-        // Check that the current gamePhase is a scoring phase
+    void update() {
+        // Check that the current gamePhase is a SCORE phase
         switch (cribbage.getGamePhase()) {
             case PLAY_SCORE: case SHOW_SCORE: case PLAY_SCORE_GO: break;
             // Not a scoring phase, return
             default: return;
         }
-
         Scorer scorer = ScorerCompositeFactory.getInstance().getScorerComposite();
         ArrayList<ScorerCache> cacheList = scorer.getCache();
         int currentPlayerScore = cribbage.getGameInfo().getCurrentPlayerScore();

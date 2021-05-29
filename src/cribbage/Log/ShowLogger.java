@@ -4,9 +4,10 @@ import ch.aplu.jcardgame.Card;
 
 import java.util.ArrayList;
 
-public class ShowLogger extends Logger {
+class ShowLogger extends Logger {
     @Override
-    public void update() {
+    void update() {
+        // Check that the current gamePhase is a SHOW phase
         switch (cribbage.getGamePhase()) {
             case SHOW: break;
             default: return;

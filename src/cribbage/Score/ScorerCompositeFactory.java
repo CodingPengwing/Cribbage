@@ -6,6 +6,8 @@ import cribbage.Cribbage;
 public class ScorerCompositeFactory {
     private static ScorerCompositeFactory instance = null;
 
+    // Hold instances to the Composites created by this factory.
+    // Returns the same instances when called.
     private static Scorer scorerCompositeShow = null;
     private static Scorer scorerCompositePlay = null;
 
@@ -13,7 +15,7 @@ public class ScorerCompositeFactory {
     private ScorerCompositeFactory() {}
 
     /**
-     * Singleton getInstance method
+     * Singleton getInstance method.
      * @return The Factory instance
      */
     public static ScorerCompositeFactory getInstance() {
@@ -21,8 +23,9 @@ public class ScorerCompositeFactory {
         return instance;
     }
 
-    // Factory methods -------------------------------------------------------------------------------------------------
-    /** @return A Composite for scoring during the show phase */
+    // Factory methods ------------------------------------------------------------------------------
+
+    // /** A Composite for scoring during the show phase */
     private Scorer getScorerCompositeShow() {
         if (scorerCompositeShow == null) {
             ScorerComposite composite = new ScorerComposite();
@@ -37,7 +40,7 @@ public class ScorerCompositeFactory {
         return scorerCompositeShow;
     }
 
-    /** @return A Composite for scoring during the Play phase */
+    // /** @return A Composite for scoring during the Play phase */
     private Scorer getScorerCompositePlay() {
         if (scorerCompositePlay == null) {
             ScorerComposite composite = new ScorerComposite();

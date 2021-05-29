@@ -20,10 +20,10 @@ public abstract class Scorer {
     public abstract int evaluate(Hand hand);
 
     public ArrayList<ScorerCache> getCache() {
-        return cache;
+        return new ArrayList<>(cache);
     }
 
-    protected void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
+    void addToCache(int score, String scoreType, ArrayList<Card> cardList) {
         if (cardList != null) {
             ArrayList<Card> sortedCardList = Cribbage.getInstance().sortCardList(cardList, Hand.SortType.POINTPRIORITY);
             this.cache.add(new ScorerCache(score, scoreType, sortedCardList));
@@ -32,7 +32,7 @@ public abstract class Scorer {
         }
     }
 
-    protected void addToCache(int score, String scoreType, ArrayList<Card> cardList, Comparator<ScorerCache> comparator) {
+    void addToCache(int score, String scoreType, ArrayList<Card> cardList, Comparator<ScorerCache> comparator) {
         if (comparator == null) {
             System.err.println("Error in addAllToCache(): null comparator");
             System.exit(1);
@@ -41,11 +41,11 @@ public abstract class Scorer {
         cache.sort(comparator);
     }
 
-    protected void addAllToCache(ArrayList<ScorerCache> cacheList) {
+    void addAllToCache(ArrayList<ScorerCache> cacheList) {
         this.cache.addAll(cacheList);
     }
 
-    protected void addAllToCache(ArrayList<ScorerCache> cacheList, Comparator<ScorerCache> comparator) {
+    void addAllToCache(ArrayList<ScorerCache> cacheList, Comparator<ScorerCache> comparator) {
         if (comparator == null) {
             System.err.println("Error in addAllToCache(): null comparator");
             System.exit(1);

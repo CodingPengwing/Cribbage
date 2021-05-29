@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class PairScorer extends Scorer {
+class PairScorer extends Scorer {
     // The size of each pair type
-    protected final static int PAIR = 2;
-    protected final static int TRIPLET = 3;
-    protected final static int QUAD = 4;
+    final static int PAIR = 2;
+    final static int TRIPLET = 3;
+    final static int QUAD = 4;
     // The score for each pair type
-    protected static final int PAIR_SCORE = Cribbage.getPropertyInt("pair2Score");
-    protected static final int TRIPLET_SCORE = Cribbage.getPropertyInt("pair3Score");
-    protected static final int QUAD_SCORE = Cribbage.getPropertyInt("pair4Score");
+    final static int PAIR_SCORE = Cribbage.getPropertyInt("pair2Score");
+    final static int TRIPLET_SCORE = Cribbage.getPropertyInt("pair3Score");
+    final static int QUAD_SCORE = Cribbage.getPropertyInt("pair4Score");
     // Strings representing the the various pair types
-    protected final static String PAIR_STR = "pair2";
-    protected final static String TRIPLET_STR = "pair3";
-    protected final static String QUAD_STR = "pair4";
+    final static String PAIR_STR = "pair2";
+    final static String TRIPLET_STR = "pair3";
+    final static String QUAD_STR = "pair4";
 
     /**
      */

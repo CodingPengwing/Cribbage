@@ -7,8 +7,8 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 
 /** Scorer for the starter card being a Jack */
-public class StarterScorer extends Scorer {
-    private final static int SCORE = Cribbage.getPropertyInt("starterScore");
+class StarterScorer extends Scorer {
+    private final static int STARTER_SCORE = Cribbage.getPropertyInt("starterScore");
     private static final String STARTER_STR = "starter";
 
     /**
@@ -22,11 +22,12 @@ public class StarterScorer extends Scorer {
         Cribbage cribbage = Cribbage.getInstance();
         Card starter = cribbage.getStarter().getFirst();
         Cribbage.Rank starterRank = (Cribbage.Rank)starter.getRank();
+        // Check that the rank of the first card is a Jack
         if (starterRank == Cribbage.Rank.JACK) {
             ArrayList<Card> cardList = new ArrayList<>();
             cardList.add(starter);
-            addToCache(SCORE, STARTER_STR, cardList);
-            return SCORE;
+            addToCache(STARTER_SCORE, STARTER_STR, cardList);
+            return STARTER_SCORE;
         }
         return 0;
     }

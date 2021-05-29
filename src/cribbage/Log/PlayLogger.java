@@ -1,8 +1,9 @@
 package cribbage.Log;
 
-public class PlayLogger extends Logger {
+class PlayLogger extends Logger {
     @Override
-    public void update() {
+    void update() {
+        // Check that the current gamePhase is a PLAY phase
         switch (cribbage.getGamePhase()) {
             case PLAY: break;
             default: return;

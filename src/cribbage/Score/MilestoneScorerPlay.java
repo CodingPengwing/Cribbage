@@ -3,7 +3,7 @@ package cribbage.Score;
 import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
-public class MilestoneScorerPlay extends MilestoneScorer {
+class MilestoneScorerPlay extends MilestoneScorer {
     private static final String THIRTYONE_STR = "thirtyone";
 
     /**

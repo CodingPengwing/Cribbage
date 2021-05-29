@@ -8,9 +8,10 @@ import cribbage.Score.ScorerCompositeFactory;
 
 import java.util.ArrayList;
 
-public class StartLogger extends Logger {
+class StartLogger extends Logger {
     @Override
-    public void update() {
+    void update() {
+        // Check that the current gamePhase is a START phase
         switch (cribbage.getGameInfo().getGamePhase()) {
             case START: break;
             default: return;

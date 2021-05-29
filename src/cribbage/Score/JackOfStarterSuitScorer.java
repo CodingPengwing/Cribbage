@@ -7,7 +7,7 @@ import cribbage.Cribbage;
 import java.util.ArrayList;
 
 /** Scorer for jack of the same suit as the starter card */
-public class JackOfStarterSuitScorer extends Scorer {
+class JackOfStarterSuitScorer extends Scorer {
     private static final int SCORE = Cribbage.getPropertyInt("jackStarterSuitScore");;
     private static final String JACK_STR = "jack";
 

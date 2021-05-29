@@ -520,8 +520,8 @@ public class Cribbage extends CardGame {
 		cribbageProperties.setProperty("Animate", "true");
 		cribbageProperties.setProperty("Player0", "cribbage.RandomPlayer");
 		cribbageProperties.setProperty("Player1", "cribbage.HumanPlayer");
-		// Default advanced settings
 		cribbageProperties.setProperty("logFile", "cribbage.log");
+		// Default advanced settings (scoring system)
 		cribbageProperties.setProperty("flush4Score", "4");
 		cribbageProperties.setProperty("flush5Score", "5");
 		cribbageProperties.setProperty("starter", "1");
@@ -591,8 +591,7 @@ public class Cribbage extends CardGame {
 	 * @param playerID The integer ID of the player to add score to
 	 * @param score The score to add
 	 */
-	public void addToPlayerScore(int playerID, int score) {
-//		notifyLoggers();
+	private void addToPlayerScore(int playerID, int score) {
 		scores[playerID] += score;
 		updateScoreDisplay(playerID);
 	}
@@ -608,11 +607,6 @@ public class Cribbage extends CardGame {
 	public Hand[] getHands() {
 		return hands;
 	}
-
-	public Hand[] getStartHands() {
-		return startHands;
-	}
-
 
 	public ArrayList<ArrayList<Card>> getPlayerDiscards() {
 		return new ArrayList<>(playerDiscards);
