@@ -4,7 +4,9 @@ import ch.aplu.jcardgame.*;
 
 import java.util.ArrayList;
 
-public abstract class IPlayer {
+// All Player related functionality has been made package-private
+
+abstract class IPlayer {
     int id;
     Deck deck; // Need this since can't get from hand to deck
     Hand hand;

@@ -1,12 +1,9 @@
 package cribbage.Log;
 
-import ch.aplu.jcardgame.Card;
 import cribbage.Cribbage;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 abstract class Logger {
     static Cribbage cribbage;

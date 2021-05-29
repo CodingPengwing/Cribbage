@@ -1,6 +1,5 @@
 package cribbage.Log;
 
-import ch.aplu.jcardgame.Card;
 import cribbage.Cribbage;
 import cribbage.Score.Scorer;
 import cribbage.Score.ScorerCache;
@@ -9,7 +8,6 @@ import cribbage.Score.ScorerCompositeFactory;
 import java.util.ArrayList;
 
 class ScoreLogger extends Logger {
-
     @Override
     void update() {
         // Check that the current gamePhase is a SCORE phase

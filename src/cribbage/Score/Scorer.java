@@ -4,9 +4,7 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 /** For evaluating the score of the game of Cribbage in a particular situation */

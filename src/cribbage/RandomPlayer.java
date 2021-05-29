@@ -2,10 +2,11 @@ package cribbage;
 
 import ch.aplu.jcardgame.Card;
 
-public class RandomPlayer extends IPlayer {
+// All Player related functionality has been made package-private
 
+public class RandomPlayer extends IPlayer {
 	@Override
-	public Card discard() {
+	Card discard() {
 		return Cribbage.randomCard(hand);
 	}
 
@@ -13,5 +14,4 @@ public class RandomPlayer extends IPlayer {
 	Card selectToLay() {
 		return hand.isEmpty() ? null : Cribbage.randomCard(hand);
 	}
-
 }

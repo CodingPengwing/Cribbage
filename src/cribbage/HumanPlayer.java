@@ -6,6 +6,8 @@ import ch.aplu.jcardgame.CardAdapter;
 import ch.aplu.jcardgame.CardListener;
 import ch.aplu.jcardgame.Hand;
 
+// All Player related functionality has been made package-private
+
 public class HumanPlayer extends IPlayer {
 	Card selected;
 
@@ -15,13 +17,13 @@ public class HumanPlayer extends IPlayer {
 	};
 
 	@Override
-	public void startSegment(Deck deck, Hand hand) {
+	void startSegment(Deck deck, Hand hand) {
 		super.startSegment(deck, hand);
 		hand.addCardListener(cardListener);
 	}
 
 	@Override
-	public Card discard() {
+	Card discard() {
 		selected = null;
 		hand.setTouchEnabled(true);
 		Cribbage.setStatus("Player " + id + " double-click card to discard.");
@@ -41,5 +43,4 @@ public class HumanPlayer extends IPlayer {
 			return selected;
 		}
 	}
-
 }

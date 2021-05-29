@@ -3,7 +3,6 @@ package cribbage.Score;
 import ch.aplu.jcardgame.Card;
 import cribbage.Cribbage;
 
-import javax.crypto.Cipher;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -11,6 +10,14 @@ public class ScorerCache {
     private int score;
     private String scoreType;
     private ArrayList<Card> cards;
+
+    // Constructor for ScorerCache. This method has default access because ScorerCache should not be created
+    // outside of Score package.
+    ScorerCache(int score, String scoreType, ArrayList<Card> cards) {
+        this.score = score;
+        this.scoreType = scoreType;
+        this.cards = cards;
+    }
 
     /** Comparator class to compare ScoreCaches by size and then alphabetically
      */
@@ -30,8 +37,7 @@ public class ScorerCache {
         }
     }
 
-    /** Comparator class to compare ScoreCaches only alphabetically
-     */
+    /** Comparator class to compare ScoreCaches only alphabetically */
     public static class CacheComparatorAlphabetical implements Comparator<ScorerCache> {
         /** compares 2 cache objects by alphabetical order
          * @param o1 cache object 1 to compare
@@ -45,15 +51,6 @@ public class ScorerCache {
         }
     }
 
-    /** Constructor for ScorerCache.
-     * This method has default access because ScorerCache should not be created outside of Score package.
-     * */
-    ScorerCache(int score, String scoreType, ArrayList<Card> cards) {
-        this.score = score;
-        this.scoreType = scoreType;
-        this.cards = cards;
-    }
-
     public int getScore() {
         return score;
     }
@@ -65,17 +62,5 @@ public class ScorerCache {
     public ArrayList<Card> getCards() {
         return cards;
     }
-
-//    public void setScore(int score) {
-//        this.score = score;
-//    }
-//
-//    public void setScoreType(String scoreType) {
-//        this.scoreType = scoreType;
-//    }
-//
-//    public void setCards(ArrayList<Card> cards) {
-//        this.cards = cards;
-//    }
 
 }

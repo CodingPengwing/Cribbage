@@ -5,7 +5,6 @@ import ch.aplu.jcardgame.Hand;
 import cribbage.Cribbage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 class RunScorerPlay extends RunScorer {

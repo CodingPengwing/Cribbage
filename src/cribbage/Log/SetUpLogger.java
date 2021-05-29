@@ -1,8 +1,6 @@
 package cribbage.Log;
 
 import ch.aplu.jcardgame.Hand;
-import cribbage.Cribbage;
-
 import java.util.ArrayList;
 
 class SetUpLogger extends Logger {

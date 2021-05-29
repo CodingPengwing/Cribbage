@@ -1,11 +1,9 @@
 package cribbage.Log;
 
 import ch.aplu.jcardgame.Card;
-import cribbage.Cribbage;
 import cribbage.Score.Scorer;
 import cribbage.Score.ScorerCache;
 import cribbage.Score.ScorerCompositeFactory;
-
 import java.util.ArrayList;
 
 class StartLogger extends Logger {
@@ -34,8 +32,15 @@ class StartLogger extends Logger {
         if (scorer.getCache().size() > 0) {
             // Dealer is always P1, starting scores have to be 2, 2
             ScorerCache cache = scorer.getCache().get(0);
-            logString = "score,P1,2," + cache.getScore() + "," + cache.getScoreType();
-            logString += ",["+ cribbage.canonical(starter) +"]";
+            // The dealer has to start with score of 0
+            int dealerScore = 0;
+            // This will be the dealer's score after the change
+            dealerScore += cache.getScore();
+
+            // Log the score of dealer
+            logString = "score,P1," + dealerScore + ",";
+            logString += cache.getScore() + "," + cache.getScoreType() + ",";
+            logString += "[" + cribbage.canonical(starter) + "]";
             printlnLog(logString);
         }
     }

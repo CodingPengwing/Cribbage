@@ -6,7 +6,6 @@ import cribbage.Cribbage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 class PairScorer extends Scorer {
     // The size of each pair type

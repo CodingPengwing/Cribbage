@@ -11,13 +11,14 @@ import java.util.Collections;
 /** Concrete Strategy class for checking if the current segment has reached an exact milestone value and scoring it
  * correctly if so */
 class MilestoneScorer extends Scorer {
-    protected static final int THIRTY_ONE = 31;
-    protected static final int FIFTEEN = 15;
-    protected static final int FIFTEEN_SCORE = Cribbage.getPropertyInt("fifteenScore");
-    protected static final int THIRTYONE_SCORE = Cribbage.getPropertyInt("thirtyoneScore");
+    static final int THIRTY_ONE = 31;
+    static final int FIFTEEN = 15;
+    static final String FIFTEEN_STR = "fifteen";
+    static final int FIFTEEN_SCORE = Cribbage.getPropertyInt("fifteenScore");
+    static final int THIRTYONE_SCORE = Cribbage.getPropertyInt("thirtyoneScore");
+
     private static final int MAX_COMB_SIZE = 5;
     private static final int MIN_COMB_SIZE = 2;
-    protected static final String FIFTEEN_STR = "fifteen";
 
     private ArrayList<ArrayList<Card>> getAllCardCombinations(ArrayList<Card> cardList) {
         // Create a new clone of the card so that we can sort it without changing the original list

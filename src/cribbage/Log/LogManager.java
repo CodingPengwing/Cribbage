@@ -1,7 +1,6 @@
 package cribbage.Log;
 
 import cribbage.Cribbage;
-
 import java.util.ArrayList;
 
 public class LogManager extends Logger {

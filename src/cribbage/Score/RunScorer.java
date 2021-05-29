@@ -19,27 +19,25 @@ class RunScorer extends Scorer {
         return RUN_SCORES.get(runLength);
     }
 
-    /**
-     * Creates a new instance of RunScorerShow
-     */
-    public RunScorer() {
+    // /** Creates a new instance of RunScorerShow */
+    RunScorer() {
         // The scores for respective runs, Change these value to change the reward score for a particular run
         for (int i = MIN_RUN; i <= MAX_RUN; i++)
             RUN_SCORES.put(i, Cribbage.getPropertyInt("run"+i+"Score"));
     }
 
-    // Returns a list of all possible runs in the given hand
-    protected ArrayList<Card[]> getAllRuns(Hand hand) {
+    // Returns a list of all possible runs in the given hand. Starting from biggest
+    // runs, then to smallest runs.
+    final ArrayList<Card[]> getAllRuns(Hand hand) {
         ArrayList<Card[]> allRuns = new ArrayList<>();
         for (int i = MAX_RUN; i >= MIN_RUN; i--) {
             allRuns.addAll(hand.getSequences(i));
         }
-
         return allRuns;
     }
 
     /**
-     * Finds all runs of between 3 and 5 (inclusive) and returns an appropriate total score for them
+     * Finds all possible runs (max run length 7) and returns an appropriate total score for them
      * @param hand The hand of cards to be evaluated
      * @return The total score of all runs, and 0 if no runs are present in the given hand
      */
