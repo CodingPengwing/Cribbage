@@ -49,7 +49,7 @@ public class Cribbage extends CardGame {
 		// Default advanced settings (scoring system)
 		cribbageProperties.setProperty("flush4Score", "4");
 		cribbageProperties.setProperty("flush5Score", "5");
-		cribbageProperties.setProperty("starter", "1");
+		cribbageProperties.setProperty("starterScore", "2");
 		cribbageProperties.setProperty("goScore", "1");
 		cribbageProperties.setProperty("jackStarterSuitScore", "1");
 		cribbageProperties.setProperty("fifteenScore", "2");
