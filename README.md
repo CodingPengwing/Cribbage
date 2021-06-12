@@ -1,4 +1,7 @@
 # Cribbage #
+This is a solution to project 2 of SWEN30006-Software modelling and Design, the 
+University of Melbourne. The specifications are provided in the repo.
+
 This is a Cribbage trainer! Cribbage is a turn-based card game, usually for 2 players,
 where you try to play and group combinations of cards so that you get more points than
 the other player. Here's the [link](https://en.wikipedia.org/wiki/Cribbage) to read up 
